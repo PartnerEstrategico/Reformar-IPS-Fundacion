@@ -6,686 +6,294 @@
 <title>Dashboard – Reformar IPS Fundación</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --blue:#007bff;
-  --indigo:#6610f2;
-  --purple:#6f42c1;
-  --pink:#e83e8c;
-  --red:#dc3545;
-  --orange:#fd7e14;
-  --yellow:#ffc107;
-  --green:#28a745;
-  --teal:#20c997;
-  --cyan:#17a2b8;
-  --white:#fff;
-  --gray:#6c757d;
-  --gray-dark:#343a40;
-  --primary:#007bff;
-  --secondary:#6c757d;
-  --success:#28a745;
-  --info:#17a2b8;
-  --warning:#ffc107;
-  --danger:#dc3545;
-  --light:#f8f9fa;
-  --dark:#343a40;
-
-  --bg:#f0f4f8;
-  --surface:#ffffff;
-  --surface2:#f8f9fa;
-  --border:#e0e6ed;
-  --text:#343a40;
-  --text2:#6c757d;
-  --radius:8px;
-  --radius-lg:12px;
+  --primary:#007bff;--dark:#343a40;--body:#6c757d;
+  --amber:#ffc107;--red:#dc3545;--green:#28a745;--teal:#20c997;
+  --cyan:#17a2b8;--indigo:#6610f2;--orange:#fd7e14;--purple:#6f42c1;
+  --bg:#f0f4f8;--surface:#ffffff;--surface2:#f8f9fa;
+  --text:#343a40;--text2:#6c757d;--border:#dee2e6;
+  --radius:8px;--radius-lg:12px;
 }
 html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:14px;}
 .wrap{width:100%;min-height:100vh;display:flex;flex-direction:column;}
-
-/* HEADER */
-.hdr{background:var(--dark);color:#fff;padding:14px 28px;border-bottom:3px solid var(--primary);display:flex;align-items:center;justify-content:space-between;}
-.hdr-logo{width:36px;height:36px;background:var(--primary);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-right:12px;font-weight:800;font-size:15px;color:#fff;flex-shrink:0;}
+.hdr{background:var(--dark);color:#fff;padding:12px 28px;border-bottom:3px solid var(--primary);display:flex;align-items:center;justify-content:space-between;}
+.hdr-logo{width:34px;height:34px;background:var(--primary);border-radius:7px;display:flex;align-items:center;justify-content:center;margin-right:12px;font-weight:800;font-size:14px;color:#fff;flex-shrink:0;}
 .hdr-left{display:flex;align-items:center;}
-.hdr-name{font-size:16px;font-weight:700;color:#fff;}
-.hdr-sub{font-size:11px;color:rgba(255,255,255,0.55);margin-top:2px;}
-.hdr-badge{background:var(--primary);color:#fff;border-radius:20px;padding:3px 12px;font-size:11px;font-weight:700;margin-left:10px;}
-.hdr-right{font-size:11px;color:rgba(255,255,255,0.55);text-align:right;border-left:1px solid rgba(255,255,255,0.15);padding-left:16px;}
+.hdr-name{font-size:15px;font-weight:700;color:#fff;}
+.hdr-sub{font-size:11px;color:rgba(255,255,255,0.5);margin-top:1px;}
+.hdr-right{font-size:11px;color:rgba(255,255,255,0.5);text-align:right;border-left:1px solid rgba(255,255,255,0.15);padding-left:16px;}
 .hdr-right strong{color:#fff;display:block;font-size:13px;}
-
-/* TABS */
-.tabs{background:#23272b;display:flex;padding:0 28px;border-bottom:1px solid rgba(255,255,255,0.08);overflow-x:auto;}
-.tab{padding:11px 18px;font-size:13px;color:rgba(255,255,255,0.5);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s;}
+.tabs{background:#23272b;display:flex;padding:0 28px;border-bottom:1px solid rgba(255,255,255,0.07);overflow-x:auto;}
+.tab{padding:10px 17px;font-size:13px;color:rgba(255,255,255,0.45);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s;}
 .tab.active{color:#fff;font-weight:600;border-bottom-color:var(--primary);}
-.tab:hover:not(.active){color:rgba(255,255,255,0.85);}
-
-/* PAGES */
+.tab:hover:not(.active){color:rgba(255,255,255,0.8);}
+.filterbar{background:var(--surface);border-bottom:1px solid var(--border);padding:9px 28px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.filterbar label{font-size:12px;color:var(--text2);}
+.fsel{font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:5px 28px 5px 10px;color:var(--text);cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;}
+.fsel:focus{outline:none;border-color:var(--primary);}
+.pill-b{background:var(--primary);color:#fff;border-radius:20px;padding:3px 12px;font-size:12px;font-weight:600;}
+.fdate-wrap{display:flex;align-items:center;gap:8px;}
+#fecha-wrap{display:none;}
+#rango-wrap{display:none;}
 .page{display:none;padding:20px 28px;background:var(--bg);flex:1;}
 .page.active{display:block;}
-
-/* SECTION LABEL */
 .lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);margin-bottom:10px;}
-
-/* KPI CARDS */
-.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px;}
-@media(max-width:900px){.kpi-row{grid-template-columns:repeat(3,1fr);}}
-@media(max-width:600px){.kpi-row{grid-template-columns:repeat(2,1fr);}}
-.kpi{background:var(--surface);border-radius:var(--radius);padding:14px 16px;border:1px solid var(--border);border-top:3px solid var(--border);position:relative;overflow:hidden;}
-.kpi::after{content:'';position:absolute;bottom:-12px;right:-12px;width:60px;height:60px;border-radius:50%;opacity:.06;}
-.kpi.b{border-top-color:var(--primary);}.kpi.b::after{background:var(--primary);}
-.kpi.g{border-top-color:var(--success);}.kpi.g::after{background:var(--success);}
-.kpi.r{border-top-color:var(--danger);}.kpi.r::after{background:var(--danger);}
-.kpi.y{border-top-color:var(--warning);}.kpi.y::after{background:var(--warning);}
-.kpi.c{border-top-color:var(--cyan);}.kpi.c::after{background:var(--cyan);}
-.kpi.t{border-top-color:var(--teal);}.kpi.t::after{background:var(--teal);}
-.kpi-l{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);margin-bottom:4px;}
-.kpi-n{font-size:30px;font-weight:800;line-height:1;color:var(--text);}
-.kpi.b .kpi-n{color:var(--primary);}
-.kpi.g .kpi-n{color:var(--success);}
-.kpi.r .kpi-n{color:var(--danger);}
-.kpi.y .kpi-n{color:#856404;}
-.kpi.c .kpi-n{color:var(--cyan);}
-.kpi.t .kpi-n{color:var(--teal);}
-.kpi-s{font-size:11px;color:var(--text2);margin-top:5px;}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
+@media(max-width:850px){.kpi-row{grid-template-columns:repeat(2,1fr);}}
+.kpi{background:var(--surface);border-radius:var(--radius);padding:13px 15px;border:1px solid var(--border);border-top:3px solid var(--border);}
+.kpi.b{border-top-color:var(--primary);}.kpi.g{border-top-color:var(--green);}.kpi.r{border-top-color:var(--red);}.kpi.y{border-top-color:var(--amber);}
+.kpi-l{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);margin-bottom:3px;}
+.kpi-n{font-size:28px;font-weight:800;line-height:1.1;color:var(--text);}
+.kpi.b .kpi-n{color:var(--primary);}.kpi.g .kpi-n{color:var(--green);}.kpi.r .kpi-n{color:var(--red);}.kpi.y .kpi-n{color:#856404;}
+.kpi-s{font-size:11px;color:var(--text2);margin-top:4px;}
 .kpi-p{font-weight:700;}
-.kpi.b .kpi-p{color:var(--primary);}
-.kpi.g .kpi-p{color:var(--success);}
-.kpi.r .kpi-p{color:var(--danger);}
-.kpi.y .kpi-p{color:#856404;}
-.kpi.c .kpi-p{color:var(--cyan);}
-.kpi.t .kpi-p{color:var(--teal);}
-
-/* CARDS */
+.kpi.b .kpi-p{color:var(--primary);}.kpi.g .kpi-p{color:var(--green);}.kpi.r .kpi-p{color:var(--red);}.kpi.y .kpi-p{color:#856404;}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:14px;}
 .card.hl{border-left:4px solid var(--primary);}
 .ch{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
-.ct{font-size:14px;font-weight:700;color:var(--text);}
-.cd{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
-
-/* TWO COL */
+.ct{font-size:13px;font-weight:700;color:var(--text);}
+.csub{font-size:11px;color:var(--text2);}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
-@media(max-width:650px){.two{grid-template-columns:1fr;}}
-.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
-@media(max-width:750px){.three{grid-template-columns:1fr;}}
-
-/* BAR ROWS */
-.br{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-.bl{font-size:12px;color:var(--text2);width:150px;flex-shrink:0;}
-.bt{flex:1;height:9px;background:var(--bg);border-radius:5px;overflow:hidden;}
-.bf{height:100%;border-radius:5px;transition:width .6s ease;}
-.bv{font-size:11px;color:var(--text);width:90px;text-align:right;flex-shrink:0;}
-
-/* DONUT */
-.dw{display:flex;align-items:center;gap:20px;}
-.li{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text);margin-bottom:8px;}
-.ld{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
-
-/* DURATION */
+@media(max-width:680px){.two{grid-template-columns:1fr;}}
+.br{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.bl{font-size:12px;color:var(--text2);width:160px;flex-shrink:0;line-height:1.3;}
+.bt{flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;}
+.bf{height:100%;border-radius:4px;}
+.bv{font-size:11px;color:var(--text);width:80px;text-align:right;flex-shrink:0;}
+.hbar{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.hbar-lbl{font-size:12px;color:var(--text);width:110px;flex-shrink:0;}
+.hbar-track{flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;}
+.hbar-fill{height:100%;border-radius:4px;}
+.hbar-val{font-size:11px;color:var(--text2);width:70px;text-align:right;flex-shrink:0;}
+.cupos-g{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;}
+@media(max-width:680px){.cupos-g{grid-template-columns:repeat(2,1fr);}}
+.cp{background:#e8f4fd;border:1px solid #bee5fb;border-radius:var(--radius);padding:10px;text-align:center;}
+.cp-l{font-size:10px;color:#004085;line-height:1.4;margin-bottom:3px;}
+.cp-n{font-size:22px;font-weight:800;color:var(--primary);}
+.cp-s{font-size:10px;color:#004085;}
+.cp-tot{background:#d4edda;border:1px solid #c3e6cb;border-radius:var(--radius);padding:10px;text-align:center;}
+.cp-tot-n{font-size:22px;font-weight:800;color:var(--green);}
+.cp-tot-l{font-size:10px;color:#155724;margin-top:2px;}
 .dg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;}
-.dv{font-size:22px;font-weight:800;color:var(--text);}
-.dbw{height:50px;display:flex;align-items:flex-end;justify-content:center;margin:4px 0;}
-.db{width:40px;border-radius:4px 4px 0 0;}
+.dv{font-size:20px;font-weight:800;color:var(--text);}
+.dbw{height:44px;display:flex;align-items:flex-end;justify-content:center;margin:4px 0;}
+.db{width:38px;border-radius:3px 3px 0 0;}
 .dl{font-size:10px;color:var(--text2);}
 .dp{font-size:11px;color:var(--text2);}
-
-/* TABLE */
+.tbl-wrap{overflow-x:auto;}
 .tbl{width:100%;font-size:12px;border-collapse:collapse;}
 .tbl th{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:#fff;background:var(--dark);padding:9px 11px;text-align:left;}
 .tbl td{padding:8px 11px;border-bottom:1px solid var(--border);color:var(--text);}
 .tbl tr:hover td{background:var(--surface2);}
 .tbl tr.tot td{font-weight:700;background:var(--surface2);}
 .bdg{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;}
-.b-g{background:#d4edda;color:#155724;}
-.b-r{background:#f8d7da;color:#721c24;}
-.b-y{background:#fff3cd;color:#856404;}
-.b-b{background:#cce5ff;color:#004085;}
-.b-c{background:#d1ecf1;color:#0c5460;}
-
-/* ALERTS */
-.aa{background:#fff3cd;border:1px solid var(--warning);border-radius:var(--radius);padding:10px 14px;font-size:12px;color:#856404;margin-top:10px;line-height:1.5;}
-.at{background:#d4edda;border:1px solid var(--success);border-radius:var(--radius);padding:10px 14px;font-size:12px;color:#155724;margin-top:10px;line-height:1.5;}
-.ai{background:#d1ecf1;border:1px solid var(--cyan);border-radius:var(--radius);padding:10px 14px;font-size:12px;color:#0c5460;margin-top:10px;line-height:1.5;}
-.ad{background:#f8d7da;border:1px solid var(--danger);border-radius:var(--radius);padding:10px 14px;font-size:12px;color:#721c24;margin-top:10px;line-height:1.5;}
-
-/* SEDE PILLS */
-.sede-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
-.sede-pill{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text2);transition:all .15s;}
-.sede-pill.active{background:var(--primary);color:#fff;border-color:var(--primary);}
-
-/* STAT GRID */
+.b-g{background:#d4edda;color:#155724;}.b-r{background:#f8d7da;color:#721c24;}
+.b-y{background:#fff3cd;color:#856404;}.b-b{background:#cce5ff;color:#004085;}
+.b-c{background:#d1ecf1;color:#0c5460;}.b-p{background:#e2d9f3;color:#432874;}
+.aa{background:#fff3cd;border:1px solid var(--amber);border-radius:var(--radius);padding:9px 13px;font-size:12px;color:#856404;margin-top:8px;line-height:1.5;}
+.at{background:#d4edda;border:1px solid var(--green);border-radius:var(--radius);padding:9px 13px;font-size:12px;color:#155724;margin-top:8px;line-height:1.5;}
+.ai{background:#d1ecf1;border:1px solid var(--cyan);border-radius:var(--radius);padding:9px 13px;font-size:12px;color:#0c5460;margin-top:8px;line-height:1.5;}
 .stat-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;}
-.stat{text-align:center;padding:10px;background:var(--bg);border-radius:var(--radius);}
+.stat{text-align:center;padding:9px;background:var(--bg);border-radius:var(--radius);}
 .stat-n{font-size:20px;font-weight:800;color:var(--text);}
 .stat-l{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;}
-
-/* PROGRESS RING */
-.ring-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 0;}
-.ring-val{font-size:32px;font-weight:800;color:var(--primary);margin-top:8px;}
-.ring-lbl{font-size:11px;color:var(--text2);}
-svg.ring{transform:rotate(-90deg);}
-.ring-bg{fill:none;stroke:var(--bg);stroke-width:10;}
-.ring-fg{fill:none;stroke:var(--primary);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .8s ease;}
-
-/* SCROLL TABLE */
-.tbl-wrap{overflow-x:auto;}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-<!-- HEADER -->
 <div class="hdr">
   <div class="hdr-left">
     <div class="hdr-logo">RI</div>
     <div>
-      <div class="hdr-name">Reformar IPS Fundación <span class="hdr-badge">9 jun 2026</span></div>
+      <div class="hdr-name">Reformar IPS Fundación</div>
       <div class="hdr-sub">Gestión de confirmación de citas médicas · Campaña outbound</div>
     </div>
   </div>
   <div class="hdr-right">
-    <strong>54 registros</strong>
-    Dos sedes · 3 profesionales
+    <strong id="hdr-meta">Cargando...</strong>
+    Dos sedes · Múltiples profesionales
   </div>
 </div>
 
-<!-- TABS -->
 <div class="tabs">
-  <div class="tab active" onclick="st('resumen')">📊 Resumen ejecutivo</div>
-  <div class="tab" onclick="st('llamadas')">📞 Llamadas</div>
-  <div class="tab" onclick="st('encuesta')">✅ Confirmaciones</div>
-  <div class="tab" onclick="st('sedes')">🏥 Por sede</div>
-  <div class="tab" onclick="st('detalle')">📋 Detalle pacientes</div>
+  <div class="tab active" onclick="st('resumen')">Resumen ejecutivo</div>
+  <div class="tab" onclick="st('tendencia')">Tendencia diaria</div>
+  <div class="tab" onclick="st('sedes')">Por sede</div>
+  <div class="tab" onclick="st('detalle')">Detalle pacientes</div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════ -->
-<!-- PAGE: RESUMEN -->
-<!-- ═══════════════════════════════════════════════════ -->
+<div class="filterbar">
+  <label>Período:</label>
+  <select class="fsel" id="periodo-sel" onchange="onPeriodo()">
+    <option value="may">Mayo 2026 (8 días)</option>
+    <option value="jun">Junio 2026 (5 días)</option>
+    <option value="todos">Todos los períodos</option>
+    <option value="fecha" selected>Fecha específica</option>
+    <option value="rango">Rango personalizado</option>
+  </select>
+  <div id="fecha-wrap" class="fdate-wrap">
+    <label>Fecha:</label>
+    <select class="fsel" id="fecha-sel" onchange="applyFilter()">
+      <option value="521">21 may 2026</option>
+      <option value="522">22 may 2026</option>
+      <option value="523">23 may 2026</option>
+      <option value="525">25 may 2026</option>
+      <option value="526">26 may 2026</option>
+      <option value="527">27 may 2026</option>
+      <option value="529">29 may 2026</option>
+      <option value="530">30 may 2026</option>
+      <option value="602">2 jun 2026</option>
+      <option value="603">3 jun 2026</option>
+      <option value="605">5 jun 2026</option>
+      <option value="606">6 jun 2026</option>
+      <option value="609" selected>9 jun 2026</option>
+    </select>
+  </div>
+  <div id="rango-wrap" class="fdate-wrap">
+    <label>Desde:</label>
+    <select class="fsel" id="rango-desde" onchange="applyFilter()">
+      <option value="521" selected>21 may 2026</option>
+      <option value="522">22 may 2026</option>
+      <option value="523">23 may 2026</option>
+      <option value="525">25 may 2026</option>
+      <option value="526">26 may 2026</option>
+      <option value="527">27 may 2026</option>
+      <option value="529">29 may 2026</option>
+      <option value="530">30 may 2026</option>
+      <option value="602">2 jun 2026</option>
+      <option value="603">3 jun 2026</option>
+      <option value="605">5 jun 2026</option>
+      <option value="606">6 jun 2026</option>
+      <option value="609">9 jun 2026</option>
+    </select>
+    <label>Hasta:</label>
+    <select class="fsel" id="rango-hasta" onchange="applyFilter()">
+      <option value="521">21 may 2026</option>
+      <option value="522">22 may 2026</option>
+      <option value="523">23 may 2026</option>
+      <option value="525">25 may 2026</option>
+      <option value="526">26 may 2026</option>
+      <option value="527">27 may 2026</option>
+      <option value="529">29 may 2026</option>
+      <option value="530">30 may 2026</option>
+      <option value="602">2 jun 2026</option>
+      <option value="603">3 jun 2026</option>
+      <option value="605">5 jun 2026</option>
+      <option value="606">6 jun 2026</option>
+      <option value="609" selected>9 jun 2026</option>
+    </select>
+  </div>
+  <span class="pill-b" id="pill-citas">—</span>
+</div>
+
+<!-- ══ RESUMEN ══ -->
 <div class="page active" id="p-resumen">
-
-  <p class="lbl">KPIs principales · 9 de junio 2026</p>
+  <p class="lbl" id="lbl-periodo">INDICADORES</p>
   <div class="kpi-row">
-    <div class="kpi b">
-      <div class="kpi-l">Total llamadas</div>
-      <div class="kpi-n">54</div>
-      <div class="kpi-s">Base gestionada</div>
-    </div>
-    <div class="kpi g">
-      <div class="kpi-l">Contacto efectivo</div>
-      <div class="kpi-n">41</div>
-      <div class="kpi-s"><span class="kpi-p">75.9%</span> contact ratio</div>
-    </div>
-    <div class="kpi t">
-      <div class="kpi-l">Confirman asistencia</div>
-      <div class="kpi-n">27</div>
-      <div class="kpi-s"><span class="kpi-p">96.4%</span> de encuestados</div>
-    </div>
-    <div class="kpi r">
-      <div class="kpi-l">Cancelaciones</div>
-      <div class="kpi-n">1</div>
-      <div class="kpi-s"><span class="kpi-p">3.6%</span> de encuestados</div>
-    </div>
-    <div class="kpi y">
-      <div class="kpi-l">No contactados</div>
-      <div class="kpi-n">13</div>
-      <div class="kpi-s">NO ANSWER + VM + otros</div>
-    </div>
+    <div class="kpi b"><div class="kpi-l">Total citas</div><div class="kpi-n" id="k-total">—</div><div class="kpi-s" id="k-total-s">—</div></div>
+    <div class="kpi g"><div class="kpi-l">Contactadas</div><div class="kpi-n" id="k-contact">—</div><div class="kpi-s"><span class="kpi-p" id="k-contact-p">—</span> contact ratio</div></div>
+    <div class="kpi g"><div class="kpi-l">Confirman asistencia</div><div class="kpi-n" id="k-asiste">—</div><div class="kpi-s"><span class="kpi-p" id="k-asiste-p">—</span> de encuestados</div></div>
+    <div class="kpi r"><div class="kpi-l">Cancelaciones</div><div class="kpi-n" id="k-cancel">—</div><div class="kpi-s"><span class="kpi-p" id="k-cancel-p">—</span> cupos liberados</div></div>
+  </div>
+
+  <div class="card hl">
+    <div class="ch"><span class="ct">Cupos liberados por servicio</span><span class="bdg b-r" id="cupos-badge">—</span></div>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:12px" id="cupos-desc"></p>
+    <div class="cupos-g" id="cupos-grid"></div>
+    <div id="cupos-alert"></div>
   </div>
 
   <div class="two">
-
-    <!-- DISPOSICIÓN -->
-    <div class="card hl">
-      <div class="ch">
-        <span class="ct">Resultado de llamadas</span>
-        <span style="font-size:11px;color:var(--text2)">54 intentos</span>
-      </div>
-      <div class="dw">
-        <canvas id="chart-disp" width="160" height="160" style="flex-shrink:0;max-width:160px;"></canvas>
-        <div>
-          <div class="li"><span class="ld" style="background:var(--primary)"></span> ANSWER — 41 (75.9%)</div>
-          <div class="li"><span class="ld" style="background:var(--danger)"></span> NO ANSWER — 7 (13.0%)</div>
-          <div class="li"><span class="ld" style="background:var(--warning)"></span> VOICEMAIL — 4 (7.4%)</div>
-          <div class="li"><span class="ld" style="background:var(--secondary)"></span> INVALID — 1 (1.9%)</div>
-          <div class="li"><span class="ld" style="background:var(--orange)"></span> BUSY — 1 (1.9%)</div>
-        </div>
-      </div>
-      <div class="at"><strong>✔ Excelente contact ratio.</strong> 75.9% supera el umbral óptimo del 70% para campañas outbound en salud.</div>
-    </div>
-
-    <!-- ENCUESTA -->
     <div class="card">
-      <div class="ch">
-        <span class="ct">Resultados encuesta de confirmación</span>
+      <div class="ch"><span class="ct">Resultado encuesta</span></div>
+      <div style="display:flex;align-items:center;gap:20px;">
+        <div style="width:160px;height:160px;flex-shrink:0;"><canvas id="dc"></canvas></div>
+        <div id="dc-legend" style="flex:1;"></div>
       </div>
-      <div class="ring-wrap">
-        <svg class="ring" width="100" height="100" viewBox="0 0 100 100">
-          <circle class="ring-bg" cx="50" cy="50" r="40"/>
-          <circle class="ring-fg" id="ring-fg" cx="50" cy="50" r="40" stroke-dasharray="251.2" stroke-dashoffset="79.7"/>
-        </svg>
-        <div class="ring-val">68.3%</div>
-        <div class="ring-lbl">Survey ratio (28 de 41 contestados)</div>
-      </div>
-      <div class="stat-g">
-        <div class="stat">
-          <div class="stat-n" style="color:var(--success)">27</div>
-          <div class="stat-l">Asistirán</div>
-        </div>
-        <div class="stat">
-          <div class="stat-n" style="color:var(--danger)">1</div>
-          <div class="stat-l">Cancelan</div>
-        </div>
-        <div class="stat">
-          <div class="stat-n" style="color:var(--text2)">13</div>
-          <div class="stat-l">Sin respuesta</div>
-        </div>
+    </div>
+    <div class="card">
+      <div class="ch"><span class="ct">Resultado de la llamada</span></div>
+      <div id="hbar-llamada"></div>
+      <div style="margin-top:16px;">
+        <p class="lbl">Duración de llamadas contestadas (seg)</p>
+        <div class="dg" id="dur-grid"></div>
+        <div id="dur-alert" style="margin-top:8px;"></div>
       </div>
     </div>
   </div>
-
-  <!-- SERVICIOS -->
   <div class="card">
-    <div class="ch">
-      <span class="ct">Distribución por tipo de servicio</span>
-      <span style="font-size:11px;color:var(--text2)">54 citas programadas</span>
-    </div>
-    <div class="br">
-      <div class="bl">Neurología</div>
-      <div class="bt"><div class="bf" style="width:51.9%;background:var(--primary)"></div></div>
-      <div class="bv"><strong>28</strong> · 51.9%</div>
-    </div>
-    <div class="br">
-      <div class="bl">Clínica de Dolor</div>
-      <div class="bt"><div class="bf" style="width:20.4%;background:var(--teal)"></div></div>
-      <div class="bv"><strong>11</strong> · 20.4%</div>
-    </div>
-    <div class="br">
-      <div class="bl">Ondas de Choque</div>
-      <div class="bt"><div class="bf" style="width:11.1%;background:var(--cyan)"></div></div>
-      <div class="bv"><strong>6</strong> · 11.1%</div>
-    </div>
-    <div class="br">
-      <div class="bl">Dolor y C. Paliativos</div>
-      <div class="bt"><div class="bf" style="width:7.4%;background:var(--indigo)"></div></div>
-      <div class="bv"><strong>4</strong> · 7.4%</div>
-    </div>
-    <div class="br">
-      <div class="bl">1ª vez por Dolor</div>
-      <div class="bt"><div class="bf" style="width:7.4%;background:var(--purple)"></div></div>
-      <div class="bv"><strong>4</strong> · 7.4%</div>
-    </div>
-    <div class="br">
-      <div class="bl">C. Paliativos Amb.</div>
-      <div class="bt"><div class="bf" style="width:1.9%;background:var(--pink)"></div></div>
-      <div class="bv"><strong>1</strong> · 1.9%</div>
-    </div>
+    <div class="ch"><span class="ct">Distribución por tipo de servicio</span><span class="csub" id="svc-total">—</span></div>
+    <div id="svc-bars"></div>
   </div>
-
-  <!-- ALERT -->
-  <div class="aa"><strong>⚠ Atención:</strong> 13 pacientes no respondieron la encuesta de confirmación (ignored). Se recomienda un segundo intento de contacto para validar asistencia.</div>
-  <div class="ai" style="margin-top:8px"><strong>ℹ Nota:</strong> 1 paciente solicitó cancelar su cita (Neurología, Sede IPS Fundación). El cupo quedó disponible para reasignación.</div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════ -->
-<!-- PAGE: LLAMADAS -->
-<!-- ═══════════════════════════════════════════════════ -->
-<div class="page" id="p-llamadas">
-  <p class="lbl">Análisis de llamadas</p>
-
-  <div class="kpi-row">
-    <div class="kpi b">
-      <div class="kpi-l">Total intentos</div>
-      <div class="kpi-n">54</div>
-      <div class="kpi-s">Registros procesados</div>
-    </div>
-    <div class="kpi g">
-      <div class="kpi-l">Contestadas</div>
-      <div class="kpi-n">41</div>
-      <div class="kpi-s"><span class="kpi-p">75.9%</span> del total</div>
-    </div>
-    <div class="kpi r">
-      <div class="kpi-l">No contestadas</div>
-      <div class="kpi-n">7</div>
-      <div class="kpi-s"><span class="kpi-p">13.0%</span> NO ANSWER</div>
-    </div>
-    <div class="kpi y">
-      <div class="kpi-l">Buzón de voz</div>
-      <div class="kpi-n">4</div>
-      <div class="kpi-s"><span class="kpi-p">7.4%</span> VOICEMAIL</div>
-    </div>
-    <div class="kpi c">
-      <div class="kpi-l">Otros</div>
-      <div class="kpi-n">2</div>
-      <div class="kpi-s">INVALID + BUSY</div>
-    </div>
-  </div>
-
-  <div class="two">
-    <!-- DURACIÓN -->
-    <div class="card">
-      <div class="ch">
-        <span class="ct">Duración de llamadas contestadas</span>
-        <span style="font-size:11px;color:var(--text2)">41 llamadas</span>
-      </div>
-      <div class="dg">
-        <div>
-          <div class="dv" style="color:var(--danger)">5</div>
-          <div class="dbw">
-            <div class="db" style="height:19%;background:var(--danger)"></div>
-          </div>
-          <div class="dl">1–15 seg</div>
-          <div class="dp">12.2%</div>
-        </div>
-        <div>
-          <div class="dv" style="color:var(--warning)">2</div>
-          <div class="dbw">
-            <div class="db" style="height:7%;background:var(--warning)"></div>
-          </div>
-          <div class="dl">16–30 seg</div>
-          <div class="dp">4.9%</div>
-        </div>
-        <div>
-          <div class="dv" style="color:var(--cyan)">2</div>
-          <div class="dbw">
-            <div class="db" style="height:7%;background:var(--cyan)"></div>
-          </div>
-          <div class="dl">31–45 seg</div>
-          <div class="dp">4.9%</div>
-        </div>
-        <div>
-          <div class="dv" style="color:var(--success)">32</div>
-          <div class="dbw">
-            <div class="db" style="height:100%;background:var(--success)"></div>
-          </div>
-          <div class="dl">&gt;45 seg</div>
-          <div class="dp">78.0%</div>
-        </div>
-      </div>
-      <div class="at" style="margin-top:12px"><strong>78%</strong> de las llamadas superaron los 45 segundos, indicando conversaciones de calidad con el paciente.</div>
-    </div>
-
-    <!-- CHART CALLS -->
-    <div class="card">
-      <div class="ch">
-        <span class="ct">Disposición de llamadas</span>
-      </div>
-      <canvas id="chart-calls" height="200"></canvas>
-    </div>
-  </div>
-
-  <!-- TABLA RESUMEN DISPOSICIÓN -->
+<!-- ══ TENDENCIA ══ -->
+<div class="page" id="p-tendencia">
+  <p class="lbl">Tendencia diaria</p>
   <div class="card">
-    <div class="ch"><span class="ct">Tabla de disposiciones</span></div>
+    <div class="ch"><span class="ct">Citas totales vs Contactadas por día</span></div>
+    <div style="height:220px;"><canvas id="chart-tend-bar"></canvas></div>
+  </div>
+  <div class="two">
+    <div class="card">
+      <div class="ch"><span class="ct">Contact ratio diario (%)</span></div>
+      <div style="height:180px;"><canvas id="chart-tend-contact"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ch"><span class="ct">Cancelaciones diarias</span></div>
+      <div style="height:180px;"><canvas id="chart-tend-cancel"></canvas></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><span class="ct">Resumen por fecha</span></div>
     <div class="tbl-wrap">
     <table class="tbl">
-      <thead>
-        <tr>
-          <th>Disposición</th>
-          <th>Cantidad</th>
-          <th>% del total</th>
-          <th>Estado</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>ANSWER</strong></td>
-          <td>41</td>
-          <td>75.9%</td>
-          <td><span class="bdg b-g">Contacto exitoso</span></td>
-        </tr>
-        <tr>
-          <td><strong>NO ANSWER</strong></td>
-          <td>7</td>
-          <td>13.0%</td>
-          <td><span class="bdg b-r">Sin contacto</span></td>
-        </tr>
-        <tr>
-          <td><strong>VOICEMAIL</strong></td>
-          <td>4</td>
-          <td>7.4%</td>
-          <td><span class="bdg b-y">Buzón activado</span></td>
-        </tr>
-        <tr>
-          <td><strong>INVALID</strong></td>
-          <td>1</td>
-          <td>1.9%</td>
-          <td><span class="bdg b-c">Número inválido</span></td>
-        </tr>
-        <tr>
-          <td><strong>BUSY</strong></td>
-          <td>1</td>
-          <td>1.9%</td>
-          <td><span class="bdg b-y">Ocupado</span></td>
-        </tr>
-        <tr class="tot">
-          <td><strong>TOTAL</strong></td>
-          <td><strong>54</strong></td>
-          <td><strong>100%</strong></td>
-          <td></td>
-        </tr>
-      </tbody>
+      <thead><tr><th>Fecha</th><th>Total</th><th>Contactadas</th><th>Contact ratio</th><th>Confirman</th><th>Cancela</th><th>Survey ratio</th></tr></thead>
+      <tbody id="tbl-tend"></tbody>
     </table>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════ -->
-<!-- PAGE: ENCUESTA -->
-<!-- ═══════════════════════════════════════════════════ -->
-<div class="page" id="p-encuesta">
-  <p class="lbl">Encuesta · ¿Asistirá a su cita médica?</p>
-
-  <div class="kpi-row">
-    <div class="kpi g">
-      <div class="kpi-l">Asistirán</div>
-      <div class="kpi-n">27</div>
-      <div class="kpi-s"><span class="kpi-p">96.4%</span> de los encuestados</div>
-    </div>
-    <div class="kpi r">
-      <div class="kpi-l">Cancelan</div>
-      <div class="kpi-n">1</div>
-      <div class="kpi-s"><span class="kpi-p">3.6%</span> cancelación</div>
-    </div>
-    <div class="kpi b">
-      <div class="kpi-l">Survey ratio</div>
-      <div class="kpi-n">68%</div>
-      <div class="kpi-s">28 de 41 contestaron</div>
-    </div>
-    <div class="kpi y">
-      <div class="kpi-l">Sin respuesta</div>
-      <div class="kpi-n">13</div>
-      <div class="kpi-s">Ignoraron la pregunta</div>
-    </div>
-    <div class="kpi t">
-      <div class="kpi-l">Ocupación esperada</div>
-      <div class="kpi-n">96%</div>
-      <div class="kpi-s">Alta tasa de asistencia</div>
-    </div>
-  </div>
-
-  <div class="two">
-    <div class="card">
-      <div class="ch"><span class="ct">Respuesta de la encuesta</span></div>
-      <canvas id="chart-enc" height="220"></canvas>
-    </div>
-    <div class="card">
-      <div class="ch"><span class="ct">Análisis de cobertura de encuesta</span></div>
-      <div class="br" style="margin-top:12px">
-        <div class="bl">Asistirán (confirmado)</div>
-        <div class="bt"><div class="bf" style="width:50%;background:var(--success)"></div></div>
-        <div class="bv"><strong>27</strong> · 50.0%</div>
-      </div>
-      <div class="br">
-        <div class="bl">Sin encuestar</div>
-        <div class="bt"><div class="bf" style="width:24.1%;background:var(--secondary)"></div></div>
-        <div class="bv"><strong>13</strong> · 24.1%</div>
-      </div>
-      <div class="br">
-        <div class="bl">No contestaron</div>
-        <div class="bt"><div class="bf" style="width:24.1%;background:var(--danger)"></div></div>
-        <div class="bv"><strong>13</strong> · 24.1%</div>
-      </div>
-      <div class="br">
-        <div class="bl">Cancelan</div>
-        <div class="bt"><div class="bf" style="width:1.9%;background:var(--warning)"></div></div>
-        <div class="bv"><strong>1</strong> · 1.9%</div>
-      </div>
-      <div class="at" style="margin-top:12px"><strong>Excelente tasa de confirmación:</strong> De quienes respondieron, el 96.4% confirmó asistencia. Se recomienda rein­tentar con los 13 pacientes sin respuesta.</div>
-      <div class="aa" style="margin-top:8px"><strong>1 cancelación detectada:</strong> Paciente con cita de Neurología en Sede IPS Fundación solicitó cancelar. El cupo debe ser reasignado.</div>
-    </div>
-  </div>
-
-  <!-- POR SEDE -->
-  <div class="card">
-    <div class="ch"><span class="ct">Confirmaciones por sede</span></div>
-    <div class="two" style="margin-bottom:0">
-      <div>
-        <p style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:10px">🏥 Sede IPS Fundación</p>
-        <div class="stat-g">
-          <div class="stat"><div class="stat-n">15</div><div class="stat-l">Total citas</div></div>
-          <div class="stat"><div class="stat-n" style="color:var(--success)">13</div><div class="stat-l">Contactadas</div></div>
-          <div class="stat"><div class="stat-n" style="color:var(--teal)">10</div><div class="stat-l">Confirman</div></div>
-        </div>
-      </div>
-      <div>
-        <p style="font-size:12px;font-weight:700;color:var(--cyan);margin-bottom:10px">🏥 Sede Nova Local 108</p>
-        <div class="stat-g">
-          <div class="stat"><div class="stat-n">39</div><div class="stat-l">Total citas</div></div>
-          <div class="stat"><div class="stat-n" style="color:var(--success)">28</div><div class="stat-l">Contactadas</div></div>
-          <div class="stat"><div class="stat-n" style="color:var(--teal)">17</div><div class="stat-l">Confirman</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════ -->
-<!-- PAGE: SEDES -->
-<!-- ═══════════════════════════════════════════════════ -->
+<!-- ══ SEDES ══ -->
 <div class="page" id="p-sedes">
-  <p class="lbl">Análisis por sede y profesional</p>
-
+  <p class="lbl">Por sede</p>
   <div class="two">
-    <!-- SEDES COMPARISON -->
     <div class="card">
       <div class="ch"><span class="ct">Comparativo sedes</span></div>
-      <canvas id="chart-sedes" height="220"></canvas>
+      <div style="height:200px;"><canvas id="chart-sedes"></canvas></div>
     </div>
-    <!-- PROFESIONALES -->
     <div class="card">
-      <div class="ch"><span class="ct">Citas por profesional médico</span></div>
-      <canvas id="chart-prof" height="220"></canvas>
+      <div class="ch"><span class="ct">Contact ratio por sede (%)</span></div>
+      <div style="height:200px;"><canvas id="chart-sedes-ratio"></canvas></div>
     </div>
   </div>
-
-  <!-- TABLA SEDES -->
   <div class="card">
-    <div class="ch"><span class="ct">Detalle comparativo de sedes</span></div>
+    <div class="ch"><span class="ct">Detalle comparativo</span></div>
     <div class="tbl-wrap">
     <table class="tbl">
-      <thead>
-        <tr>
-          <th>Sede</th>
-          <th>Total citas</th>
-          <th>Contactadas</th>
-          <th>Contact ratio</th>
-          <th>Confirman</th>
-          <th>Cancela</th>
-          <th>Sin encuesta</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Sede IPS Fundación</strong></td>
-          <td>15</td>
-          <td>13</td>
-          <td><span class="bdg b-g">86.7%</span></td>
-          <td>10</td>
-          <td>1</td>
-          <td>2</td>
-        </tr>
-        <tr>
-          <td><strong>Sede Nova Local 108</strong></td>
-          <td>39</td>
-          <td>28</td>
-          <td><span class="bdg b-b">71.8%</span></td>
-          <td>17</td>
-          <td>0</td>
-          <td>11</td>
-        </tr>
-        <tr class="tot">
-          <td><strong>TOTAL</strong></td>
-          <td><strong>54</strong></td>
-          <td><strong>41</strong></td>
-          <td><strong>75.9%</strong></td>
-          <td><strong>27</strong></td>
-          <td><strong>1</strong></td>
-          <td><strong>13</strong></td>
-        </tr>
-      </tbody>
-    </table>
-    </div>
-  </div>
-
-  <!-- TABLA PROFESIONALES -->
-  <div class="card">
-    <div class="ch"><span class="ct">Detalle por profesional</span></div>
-    <div class="tbl-wrap">
-    <table class="tbl">
-      <thead>
-        <tr>
-          <th>Profesional</th>
-          <th>Sede</th>
-          <th>Citas asignadas</th>
-          <th>% del total</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Rubén Darío Teherán Martínez</strong></td>
-          <td>Nova Local 108</td>
-          <td>26</td>
-          <td><span class="bdg b-b">48.1%</span></td>
-        </tr>
-        <tr>
-          <td><strong>Marcela Patricia Caldera Caballero</strong></td>
-          <td>IPS Fundación</td>
-          <td>15</td>
-          <td><span class="bdg b-g">27.8%</span></td>
-        </tr>
-        <tr>
-          <td><strong>Aury Stella Carrasquilla Romero</strong></td>
-          <td>Nova Local 108</td>
-          <td>13</td>
-          <td><span class="bdg b-c">24.1%</span></td>
-        </tr>
-        <tr class="tot">
-          <td><strong>TOTAL</strong></td>
-          <td>2 sedes</td>
-          <td><strong>54</strong></td>
-          <td><strong>100%</strong></td>
-        </tr>
-      </tbody>
+      <thead><tr><th>Sede</th><th>Total</th><th>Contactadas</th><th>Contact ratio</th><th>Confirman</th><th>Cancela</th></tr></thead>
+      <tbody id="tbl-sedes"></tbody>
     </table>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════ -->
-<!-- PAGE: DETALLE -->
-<!-- ═══════════════════════════════════════════════════ -->
+<!-- ══ DETALLE ══ -->
 <div class="page" id="p-detalle">
-  <p class="lbl">Listado completo de pacientes · 9 jun 2026</p>
-
-  <!-- FILTER -->
   <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
-    <label style="font-size:12px;color:var(--text2)">Filtrar sede:</label>
-    <select id="filt-sede" onchange="filtrarTabla()" style="font-size:12px;padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);">
+    <label style="font-size:12px;color:var(--text2)">Sede:</label>
+    <select id="f-sede" onchange="buildDetailTable()" class="fsel">
       <option value="todas">Todas las sedes</option>
       <option value="fundacion">IPS Fundación</option>
       <option value="nova">Nova Local 108</option>
     </select>
     <label style="font-size:12px;color:var(--text2)">Disposición:</label>
-    <select id="filt-disp" onchange="filtrarTabla()" style="font-size:12px;padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);">
+    <select id="f-disp" onchange="buildDetailTable()" class="fsel">
       <option value="todas">Todas</option>
       <option value="ANSWER">ANSWER</option>
       <option value="NO ANSWER">NO ANSWER</option>
@@ -693,237 +301,422 @@ svg.ring{transform:rotate(-90deg);}
       <option value="INVALID">INVALID</option>
       <option value="BUSY">BUSY</option>
     </select>
-    <span id="contador-tbl" style="font-size:12px;color:var(--text2);margin-left:auto;"></span>
+    <span id="tbl-count" style="font-size:12px;color:var(--text2);margin-left:auto;"></span>
   </div>
-
   <div class="card" style="padding:0;">
     <div class="tbl-wrap">
-    <table class="tbl" id="tbl-detalle">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Paciente</th>
-          <th>Hora cita</th>
-          <th>Sede</th>
-          <th>Servicio</th>
-          <th>Profesional</th>
-          <th>Intentos</th>
-          <th>Disposición</th>
-          <th>Duración</th>
-          <th>Respuesta encuesta</th>
-        </tr>
-      </thead>
+    <table class="tbl">
+      <thead><tr><th>#</th><th>Fecha</th><th>Paciente</th><th>Hora</th><th>Sede</th><th>Servicio</th><th>Intentos</th><th>Disposición</th><th>Duración</th><th>Respuesta</th></tr></thead>
       <tbody id="tbl-body"></tbody>
     </table>
     </div>
   </div>
 </div>
 
-</div><!-- /wrap -->
+</div>
 
 <script>
-// ── TAB NAVIGATION ──────────────────────────────────
-function st(id){
-  document.querySelectorAll('.tab').forEach((t,i)=>{
-    const pages=['resumen','llamadas','encuesta','sedes','detalle'];
-    t.classList.toggle('active', pages[i]===id);
+Chart.register(ChartDataLabels);
+
+// ══ DATA — todos los días ══════════════════════════════
+// key: DMESES (521=21may, 602=2jun, etc.)
+// total, answered, vm, na, busy, inv, will, wont, ignored, dur[1-15,16-30,31-45,>45]
+const DATA = {
+  521:{total:49, answered:32, vm:3,  na:12, busy:2, inv:0, will:21, wont:2,  ignored:9,  dur:[4,3,1,24]},
+  522:{total:51, answered:39, vm:2,  na:9,  busy:1, inv:0, will:29, wont:4,  ignored:6,  dur:[1,1,3,34]},
+  523:{total:10, answered:8,  vm:0,  na:1,  busy:1, inv:0, will:8,  wont:0,  ignored:0,  dur:[0,0,0,8]},
+  525:{total:29, answered:17, vm:5,  na:6,  busy:1, inv:0, will:12, wont:0,  ignored:5,  dur:[1,1,0,15]},
+  526:{total:38, answered:23, vm:9,  na:6,  busy:0, inv:0, will:20, wont:0,  ignored:3,  dur:[1,0,0,22]},
+  527:{total:64, answered:43, vm:9,  na:12, busy:0, inv:0, will:29, wont:7,  ignored:7,  dur:[2,2,2,37]},
+  529:{total:21, answered:16, vm:3,  na:2,  busy:0, inv:0, will:12, wont:2,  ignored:2,  dur:[0,0,2,14]},
+  530:{total:11, answered:9,  vm:2,  na:0,  busy:0, inv:0, will:7,  wont:1,  ignored:1,  dur:[0,0,0,9]},
+  602:{total:42, answered:27, vm:4,  na:9,  busy:2, inv:0, will:20, wont:2,  ignored:5,  dur:[0,1,1,25]},
+  603:{total:66, answered:47, vm:9,  na:8,  busy:1, inv:1, will:37, wont:4,  ignored:6,  dur:[1,0,1,45]},
+  605:{total:25, answered:16, vm:5,  na:1,  busy:1, inv:2, will:13, wont:1,  ignored:2,  dur:[2,0,1,13]},
+  606:{total:55, answered:44, vm:4,  na:6,  busy:1, inv:0, will:28, wont:5,  ignored:11, dur:[2,3,4,35]},
+  609:{total:54, answered:41, vm:4,  na:7,  busy:1, inv:1, will:27, wont:1,  ignored:13, dur:[5,2,2,32]},
+};
+
+const ALL_DAYS=[521,522,523,525,526,527,529,530,602,603,605,606,609];
+const MAY_DAYS=[521,522,523,525,526,527,529,530];
+const JUN_DAYS=[602,603,605,606,609];
+const DAY_LABELS={521:'21 may',522:'22 may',523:'23 may',525:'25 may',526:'26 may',527:'27 may',529:'29 may',530:'30 may',602:'2 jun',603:'3 jun',605:'5 jun',606:'6 jun',609:'9 jun'};
+const SVC_COLORS=['#007bff','#20c997','#17a2b8','#6610f2','#6f42c1','#e83e8c','#fd7e14'];
+
+// Sedes data per day (fundacion / nova)
+const SEDE_DATA = {
+  521:{f:{t:49,a:32,will:21,wont:2}, n:{t:0,a:0,will:0,wont:0}},
+  522:{f:{t:51,a:39,will:29,wont:4}, n:{t:0,a:0,will:0,wont:0}},
+  523:{f:{t:10,a:8,will:8,wont:0},   n:{t:0,a:0,will:0,wont:0}},
+  525:{f:{t:29,a:17,will:12,wont:0}, n:{t:0,a:0,will:0,wont:0}},
+  526:{f:{t:24,a:15,will:13,wont:0}, n:{t:14,a:8,will:7,wont:0}},
+  527:{f:{t:38,a:27,will:19,wont:5}, n:{t:26,a:16,will:10,wont:2}},
+  529:{f:{t:21,a:16,will:12,wont:2}, n:{t:0,a:0,will:0,wont:0}},
+  530:{f:{t:11,a:9,will:7,wont:1},   n:{t:0,a:0,will:0,wont:0}},
+  602:{f:{t:22,a:14,will:11,wont:1}, n:{t:20,a:13,will:9,wont:1}},
+  603:{f:{t:45,a:33,will:26,wont:3}, n:{t:21,a:14,will:11,wont:1}},
+  605:{f:{t:18,a:12,will:10,wont:1}, n:{t:7,a:4,will:3,wont:0}},
+  606:{f:{t:47,a:38,will:24,wont:5}, n:{t:8,a:6,will:4,wont:0}},
+  609:{f:{t:15,a:13,will:10,wont:1}, n:{t:39,a:28,will:17,wont:0}},
+};
+
+// Aggregated function
+function agg(days){
+  const r={total:0,answered:0,vm:0,na:0,busy:0,inv:0,will:0,wont:0,ignored:0,dur:[0,0,0,0],
+    sede:{f:{t:0,a:0,will:0,wont:0},n:{t:0,a:0,will:0,wont:0}}};
+  days.forEach(d=>{
+    const v=DATA[d]; const s=SEDE_DATA[d];
+    r.total+=v.total;r.answered+=v.answered;r.vm+=v.vm;r.na+=v.na;r.busy+=v.busy;r.inv+=v.inv;
+    r.will+=v.will;r.wont+=v.wont;r.ignored+=v.ignored;
+    v.dur.forEach((x,i)=>r.dur[i]+=x);
+    ['f','n'].forEach(k=>{r.sede[k].t+=s[k].t;r.sede[k].a+=s[k].a;r.sede[k].will+=s[k].will;r.sede[k].wont+=s[k].wont;});
   });
-  document.querySelectorAll('.page').forEach(p=>{
-    p.classList.toggle('active', p.id==='p-'+id);
-  });
-  if(id==='detalle') buildTable();
+  return r;
 }
 
-// ── CHART: DISPOSICIÓN (donut) ───────────────────────
-new Chart(document.getElementById('chart-disp'),{
-  type:'doughnut',
-  data:{
-    labels:['ANSWER','NO ANSWER','VOICEMAIL','INVALID','BUSY'],
-    datasets:[{
-      data:[41,7,4,1,1],
-      backgroundColor:['#007bff','#dc3545','#ffc107','#6c757d','#fd7e14'],
-      borderWidth:2,borderColor:'#fff'
-    }]
-  },
-  options:{plugins:{legend:{display:false}},cutout:'68%',responsive:true}
-});
+function fmt(n){return Number(n).toLocaleString('es-CO');}
+function pct(a,b){return b?((a/b)*100).toFixed(1)+'%':'0%';}
+function pctN(a,b){return b?parseFloat(((a/b)*100).toFixed(1)):0;}
 
-// ── CHART: LLAMADAS (bar) ────────────────────────────
-new Chart(document.getElementById('chart-calls'),{
-  type:'bar',
-  data:{
-    labels:['ANSWER','NO ANSWER','VOICEMAIL','INVALID','BUSY'],
-    datasets:[{
-      label:'Llamadas',
-      data:[41,7,4,1,1],
-      backgroundColor:['#007bff','#dc3545','#ffc107','#6c757d','#fd7e14'],
-      borderRadius:5
-    }]
-  },
-  options:{
-    plugins:{legend:{display:false}},
-    scales:{y:{beginAtZero:true,grid:{color:'#f0f0f0'},ticks:{stepSize:5}}},
-    responsive:true
+// ══ NAV ════════════════════════════════════════════════
+function st(id){
+  const ids=['resumen','tendencia','sedes','detalle'];
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',ids[i]===id));
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='p-'+id));
+  if(id==='tendencia')buildTendencia();
+  if(id==='sedes')buildSedes();
+  if(id==='detalle')buildDetailTable();
+}
+
+// ══ FILTER ═════════════════════════════════════════════
+function onPeriodo(){
+  const p=document.getElementById('periodo-sel').value;
+  document.getElementById('fecha-wrap').style.display=p==='fecha'?'flex':'none';
+  document.getElementById('rango-wrap').style.display=p==='rango'?'flex':'none';
+  applyFilter();
+}
+
+function getRange(){
+  const p=document.getElementById('periodo-sel').value;
+  if(p==='may') return MAY_DAYS;
+  if(p==='jun') return JUN_DAYS;
+  if(p==='todos') return ALL_DAYS;
+  if(p==='fecha') return [+document.getElementById('fecha-sel').value];
+  if(p==='rango'){
+    const d1=+document.getElementById('rango-desde').value;
+    const d2=+document.getElementById('rango-hasta').value;
+    return ALL_DAYS.filter(d=>d>=Math.min(d1,d2)&&d<=Math.max(d1,d2));
   }
-});
+  return [609];
+}
 
-// ── CHART: ENCUESTA (doughnut) ───────────────────────
-new Chart(document.getElementById('chart-enc'),{
-  type:'doughnut',
-  data:{
-    labels:['Asistirá','Cancela','Ignored'],
-    datasets:[{
-      data:[27,1,13],
-      backgroundColor:['#28a745','#dc3545','#6c757d'],
-      borderWidth:2,borderColor:'#fff'
-    }]
-  },
-  options:{
-    plugins:{legend:{position:'bottom',labels:{font:{size:12}}}},
-    cutout:'60%',responsive:true
-  }
-});
+// ══ CHARTS STATE ═══════════════════════════════════════
+let donutChart=null,tendBarChart=null,tendContactChart=null,tendCancelChart=null,sedeChart=null,sedeRatioChart=null;
 
-// ── CHART: SEDES (bar grouped) ───────────────────────
-new Chart(document.getElementById('chart-sedes'),{
-  type:'bar',
-  data:{
-    labels:['IPS Fundación','Nova Local 108'],
-    datasets:[
-      {label:'Total citas',data:[15,39],backgroundColor:'#007bff',borderRadius:5},
-      {label:'Contactadas',data:[13,28],backgroundColor:'#28a745',borderRadius:5},
-      {label:'Confirman',data:[10,17],backgroundColor:'#20c997',borderRadius:5},
-    ]
-  },
-  options:{
-    plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},
-    scales:{y:{beginAtZero:true,grid:{color:'#f0f0f0'}}},
-    responsive:true
-  }
-});
+function applyFilter(){
+  const days=getRange();
+  const v=agg(days);
+  const surveyed=v.will+v.wont;
 
-// ── CHART: PROFESIONALES ─────────────────────────────
-new Chart(document.getElementById('chart-prof'),{
-  type:'bar',
-  data:{
-    labels:['R. Teherán','M. Caldera','A. Carrasquilla'],
-    datasets:[{
-      label:'Citas asignadas',
-      data:[26,15,13],
-      backgroundColor:['#007bff','#28a745','#17a2b8'],
-      borderRadius:5
-    }]
-  },
-  options:{
-    indexAxis:'y',
-    plugins:{legend:{display:false}},
-    scales:{x:{beginAtZero:true,grid:{color:'#f0f0f0'}}},
-    responsive:true
-  }
-});
+  // Header
+  const lbl=days.length===1?DAY_LABELS[days[0]]+' 2026':DAY_LABELS[days[0]]+' – '+DAY_LABELS[days[days.length-1]]+' 2026';
+  document.getElementById('hdr-meta').innerHTML='<strong>'+lbl+' · '+fmt(v.total)+' registros</strong>';
+  document.getElementById('pill-citas').textContent=fmt(v.total)+' citas';
+  document.getElementById('lbl-periodo').textContent='INDICADORES · '+lbl.toUpperCase();
 
-// ── DETALLE TABLE DATA ────────────────────────────────
-const pacientes=[
-  {n:1,nombre:'JUVENAL MARQUEZ GONZALEZ',hora:'3:45 PM',sede:'IPS Fundación',servicio:'Control Neurología',prof:'Caldera',intentos:3,disp:'ANSWER',dur:129,resp:'ASISTIRÁ A LA CITA'},
-  {n:2,nombre:'RODIMIRO TORRES REHENALS',hora:'4:00 PM',sede:'IPS Fundación',servicio:'Control Neurología',prof:'Caldera',intentos:5,disp:'ANSWER',dur:129,resp:'ASISTIRÁ A LA CITA'},
-  {n:3,nombre:'RAIMUNDO DAGER MORALES',hora:'5:00 PM',sede:'IPS Fundación',servicio:'Control Neurología',prof:'Caldera',intentos:2,disp:'ANSWER',dur:74,resp:'ASISTIRÁ A LA CITA'},
-  {n:4,nombre:'DANERIS MARMOLEJO SILVA',hora:'4:20 PM',sede:'Nova Local 108',servicio:'Control Neurología',prof:'Carrasquilla',intentos:2,disp:'ANSWER',dur:73,resp:'ASISTIRÁ A LA CITA'},
-  {n:5,nombre:'ALBA VILLARREAL CASTILLO',hora:'11:45 AM',sede:'Nova Local 108',servicio:'Clínica de Dolor',prof:'Teherán',intentos:2,disp:'ANSWER',dur:71,resp:'ASISTIRÁ A LA CITA'},
-  {n:6,nombre:'NIDIA ROZO CRUZ',hora:'2:00 PM',sede:'Nova Local 108',servicio:'Control Neurología',prof:'Carrasquilla',intentos:3,disp:'ANSWER',dur:71,resp:'ASISTIRÁ A LA CITA'},
-  {n:7,nombre:'ELVIA PAEZ GUERRERO',hora:'2:30 PM',sede:'IPS Fundación',servicio:'Control Neurología',prof:'Caldera',intentos:1,disp:'ANSWER',dur:70,resp:'ASISTIRÁ A LA CITA'},
-  {n:8,nombre:'CINDY MONRROY',hora:'8:15 AM',sede:'Nova Local 108',servicio:'Dolor y C. Paliativos',prof:'Teherán',intentos:2,disp:'ANSWER',dur:70,resp:'ASISTIRÁ A LA CITA'},
-  {n:9,nombre:'EDIXON ASCANIO PERNALETE',hora:'11:00 AM',sede:'Nova Local 108',servicio:'Clínica de Dolor',prof:'Teherán',intentos:3,disp:'ANSWER',dur:70,resp:'ASISTIRÁ A LA CITA'},
-  {n:10,nombre:'DIOSELINA SUESCUN VAZQUEZ',hora:'5:20 PM',sede:'Nova Local 108',servicio:'Control Neurología',prof:'Carrasquilla',intentos:1,disp:'ANSWER',dur:68,resp:'ASISTIRÁ A LA CITA'},
-  {n:11,nombre:'OSCAR AMAYA MESA',hora:'10:15 AM',sede:'Nova Local 108',servicio:'Clínica de Dolor',prof:'Teherán',intentos:2,disp:'ANSWER',dur:68,resp:'ASISTIRÁ A LA CITA'},
-  {n:12,nombre:'SHIRLEY GONZALEZ DUENAS',hora:'10:30 AM',sede:'Nova Local 108',servicio:'1ª vez Dolor',prof:'Teherán',intentos:3,disp:'ANSWER',dur:67,resp:'ASISTIRÁ A LA CITA'},
-  {n:13,nombre:'ANGIE ANZOATEGUI BATISTA',hora:'3:30 PM',sede:'IPS Fundación',servicio:'Control Neurología',prof:'Caldera',intentos:1,disp:'ANSWER',dur:67,resp:'ASISTIRÁ A LA CITA'},
-  {n:14,nombre:'CARLOS BUSTILLO BERROCAL',hora:'5:15 PM',sede:'IPS Fundación',servicio:'1ª vez Neurología',prof:'Caldera',intentos:5,disp:'ANSWER',dur:67,resp:'ASISTIRÁ A LA CITA'},
-  {n:15,nombre:'CECILIA SCHOTBORGH GUERRERO',hora:'9:00 AM',sede:'Nova Local 108',servicio:'Clínica de Dolor',prof:'Teherán',intentos:1,disp:'ANSWER',dur:66,resp:'ASISTIRÁ A LA CITA'},
-  {n:16,nombre:'AURORA GARCIA MONTES',hora:'5:00 PM',sede:'Nova Local 108',servicio:'Ondas de Choque',prof:'Teherán',intentos:5,disp:'ANSWER',dur:66,resp:'ASISTIRÁ A LA CITA'},
-  {n:17,nombre:'MARIA MARRUGO JIMENEZ',hora:'8:00 AM',sede:'Nova Local 108',servicio:'Dolor y C. Paliativos',prof:'Teherán',intentos:1,disp:'ANSWER',dur:66,resp:'ASISTIRÁ A LA CITA'},
-  {n:18,nombre:'MARCELA GOMEZ BENAVIDES',hora:'5:15 PM',sede:'Nova Local 108',servicio:'Ondas de Choque',prof:'Teherán',intentos:4,disp:'ANSWER',dur:66,resp:'ASISTIRÁ A LA CITA'},
-  {n:19,nombre:'PEDRO MEDINA GUZMAN',hora:'3:15 PM',sede:'IPS Fundación',servicio:'Control Neurología',prof:'Caldera',intentos:1,disp:'ANSWER',dur:66,resp:'ASISTIRÁ A LA CITA'},
-  {n:20,nombre:'ROBERTO BUSTILLO HERRERA',hora:'10:00 AM',sede:'Nova Local 108',servicio:'Clínica de Dolor',prof:'Teherán',intentos:3,disp:'ANSWER',dur:65,resp:'ASISTIRÁ A LA CITA'},
-  {n:21,nombre:'MARGARITA PENA LOPEZ',hora:'5:30 PM',sede:'IPS Fundación',servicio:'Control Neurología',prof:'Caldera',intentos:1,disp:'ANSWER',dur:65,resp:'ASISTIRÁ A LA CITA'},
-  {n:22,nombre:'ANA CORTES WILLIE',hora:'11:30 AM',sede:'Nova Local 108',servicio:'Clínica de Dolor',prof:'Teherán',intentos:4,disp:'ANSWER',dur:65,resp:'ASISTIRÁ A LA CITA'},
-  {n:23,nombre:'CARMEN CABRALES VARGAS',hora:'1:15 PM',sede:'Nova Local 108',servicio:'Clínica de Dolor',prof:'Teherán',intentos:3,disp:'ANSWER',dur:64,resp:'ASISTIRÁ A LA CITA'},
-  {n:24,nombre:'JUVENAL RAMOS GONZALEZ',hora:'4:00 PM',sede:'Nova Local 108',servicio:'Control Neurología',prof:'Carrasquilla',intentos:1,disp:'ANSWER',dur:64,resp:'ASISTIRÁ A LA CITA'},
-  {n:25,nombre:'CONCEPCION BERMUDEZ PADILLA',hora:'8:45 AM',sede:'Nova Local 108',servicio:'Clínica de Dolor',prof:'Teherán',intentos:6,disp:'ANSWER',dur:64,resp:'ASISTIRÁ A LA CITA'},
-  {n:26,nombre:'ELDA CAMACHO JULIO',hora:'11:15 AM',sede:'Nova Local 108',servicio:'1ª vez Dolor',prof:'Teherán',intentos:6,disp:'ANSWER',dur:63,resp:'ASISTIRÁ A LA CITA'},
-  {n:27,nombre:'ANTONIA DEL RIO ECHENIQUE',hora:'9:45 AM',sede:'Nova Local 108',servicio:'1ª vez Dolor',prof:'Teherán',intentos:1,disp:'ANSWER',dur:62,resp:'ASISTIRÁ A LA CITA'},
-  {n:28,nombre:'MAYERLYS SALCEDO COVO',hora:'4:15 PM',sede:'IPS Fundación',servicio:'Control Neurología',prof:'Caldera',intentos:3,disp:'ANSWER',dur:78,resp:'SOLICITA CANCELAR'},
-  {n:29,nombre:'IRMA ORTEGA GARCES',hora:'5:45 PM',sede:'IPS Fundación',servicio:'Control Neurología',prof:'Caldera',intentos:1,disp:'ANSWER',dur:61,resp:'Pendiente'},
-  {n:30,nombre:'GUSTAVO CABALLERO GOMEZ',hora:'5:00 PM',sede:'Nova Local 108',servicio:'Control Neurología',prof:'Carrasquilla',intentos:2,disp:'ANSWER',dur:58,resp:'Pendiente'},
-  {n:31,nombre:'MARELVY JIMENEZ BARCHA',hora:'2:20 PM',sede:'Nova Local 108',servicio:'1ª vez Neurología',prof:'Carrasquilla',intentos:3,disp:'ANSWER',dur:57,resp:'Pendiente'},
-  {n:32,nombre:'FLOR RODRIGUEZ PAZOS',hora:'6:00 PM',sede:'Nova Local 108',servicio:'Control Neurología',prof:'Carrasquilla',intentos:1,disp:'ANSWER',dur:46,resp:'—'},
-  {n:33,nombre:'LEWIS SALAS CARREAZO',hora:'3:00 PM',sede:'IPS Fundación',servicio:'Control Neurología',prof:'Caldera',intentos:1,disp:'ANSWER',dur:34,resp:'—'},
-  {n:34,nombre:'LUZ NAVARRO CARO',hora:'2:45 PM',sede:'IPS Fundación',servicio:'Control Neurología',prof:'Caldera',intentos:1,disp:'ANSWER',dur:32,resp:'—'},
-  {n:35,nombre:'SANDRA ENCINALES REYES',hora:'9:30 AM',sede:'Nova Local 108',servicio:'Clínica de Dolor',prof:'Teherán',intentos:1,disp:'ANSWER',dur:17,resp:'—'},
-  {n:36,nombre:'YOLANDA TORRES PINZON',hora:'5:40 PM',sede:'Nova Local 108',servicio:'Control Neurología',prof:'Carrasquilla',intentos:1,disp:'ANSWER',dur:16,resp:'—'},
-  {n:37,nombre:'OSCAR REDONDO BERMUDEZ',hora:'12:00 PM',sede:'Nova Local 108',servicio:'Clínica de Dolor',prof:'Teherán',intentos:1,disp:'ANSWER',dur:9,resp:'—'},
-  {n:38,nombre:'CARMEN FONSECA CASTILLO',hora:'12:15 PM',sede:'Nova Local 108',servicio:'Dolor y C. Paliativos',prof:'Teherán',intentos:1,disp:'ANSWER',dur:9,resp:'—'},
-  {n:39,nombre:'MARIA CARMONA VILORIA',hora:'2:15 PM',sede:'IPS Fundación',servicio:'Control Neurología',prof:'Caldera',intentos:4,disp:'ANSWER',dur:8,resp:'—'},
-  {n:40,nombre:'JULIO LOPEZ MEZA',hora:'3:20 PM',sede:'Nova Local 108',servicio:'Control Neurología',prof:'Carrasquilla',intentos:4,disp:'ANSWER',dur:8,resp:'—'},
-  {n:41,nombre:'ADALGIZA ANGULO GOMEZ',hora:'3:15 PM',sede:'Nova Local 108',servicio:'Ondas de Choque',prof:'Teherán',intentos:2,disp:'ANSWER',dur:7,resp:'—'},
-  {n:42,nombre:'LUZ ROMAN VALQUEZ',hora:'9:15 AM',sede:'Nova Local 108',servicio:'Dolor y C. Paliativos',prof:'Teherán',intentos:6,disp:'BUSY',dur:0,resp:'—'},
-  {n:43,nombre:'MARGARITA DIAZ TINOCO',hora:'2:45 PM',sede:'Nova Local 108',servicio:'Ondas de Choque',prof:'Teherán',intentos:6,disp:'INVALID',dur:0,resp:'—'},
-  {n:44,nombre:'ALEXIS CORONEL DE HERRERA',hora:'2:40 PM',sede:'Nova Local 108',servicio:'Control Neurología',prof:'Carrasquilla',intentos:6,disp:'NO ANSWER',dur:0,resp:'—'},
-  {n:45,nombre:'OMAR POLO BAHOQUE',hora:'4:30 PM',sede:'IPS Fundación',servicio:'Control Neurología',prof:'Caldera',intentos:6,disp:'NO ANSWER',dur:0,resp:'—'},
-  {n:46,nombre:'JUAN AYOLA PEREZ',hora:'4:30 PM',sede:'Nova Local 108',servicio:'Ondas de Choque',prof:'Teherán',intentos:6,disp:'NO ANSWER',dur:0,resp:'—'},
-  {n:47,nombre:'JENNIFER GIL ALMANZA',hora:'8:30 AM',sede:'Nova Local 108',servicio:'Clínica de Dolor',prof:'Teherán',intentos:6,disp:'NO ANSWER',dur:0,resp:'—'},
-  {n:48,nombre:'ROBINSON SARMIENTO VEGA',hora:'3:00 PM',sede:'Nova Local 108',servicio:'1ª vez Neurología',prof:'Carrasquilla',intentos:6,disp:'NO ANSWER',dur:0,resp:'—'},
-  {n:49,nombre:'LUIS MONTALVAN BUELVAS',hora:'4:00 PM',sede:'Nova Local 108',servicio:'Ondas de Choque',prof:'Teherán',intentos:6,disp:'NO ANSWER',dur:0,resp:'—'},
-  {n:50,nombre:'JULIA ZAHER DE CHAR',hora:'10:45 AM',sede:'Nova Local 108',servicio:'1ª vez Dolor',prof:'Teherán',intentos:6,disp:'NO ANSWER',dur:0,resp:'—'},
-  {n:51,nombre:'CELIA MEDINA PANIZA',hora:'4:45 PM',sede:'IPS Fundación',servicio:'Control Neurología',prof:'Caldera',intentos:6,disp:'VOICEMAIL',dur:0,resp:'—'},
-  {n:52,nombre:'LAURA CORTECERO NIEVES',hora:'12:45 PM',sede:'Nova Local 108',servicio:'C. Paliativos',prof:'Teherán',intentos:6,disp:'VOICEMAIL',dur:0,resp:'—'},
-  {n:53,nombre:'MERCEDES GUERRERO RODRIGUEZ',hora:'3:40 PM',sede:'Nova Local 108',servicio:'1ª vez Neurología',prof:'Carrasquilla',intentos:6,disp:'VOICEMAIL',dur:0,resp:'—'},
-  {n:54,nombre:'EDWIN MARTINEZ MARTINEZ',hora:'4:40 PM',sede:'Nova Local 108',servicio:'Control Neurología',prof:'Carrasquilla',intentos:6,disp:'VOICEMAIL',dur:0,resp:'—'},
+  // KPIs
+  document.getElementById('k-total').textContent=fmt(v.total);
+  document.getElementById('k-total-s').textContent=days.length>1?days.length+' días · ~'+fmt(Math.round(v.total/days.length))+'/día':'1 día seleccionado';
+  document.getElementById('k-contact').textContent=fmt(v.answered);
+  document.getElementById('k-contact-p').textContent=pct(v.answered,v.total);
+  document.getElementById('k-asiste').textContent=fmt(v.will);
+  document.getElementById('k-asiste-p').textContent=pct(v.will,surveyed);
+  document.getElementById('k-cancel').textContent=fmt(v.wont);
+  document.getElementById('k-cancel-p').textContent=pct(v.wont,surveyed);
+
+  // CUPOS — servicios con cancelaciones hardcoded por día
+  const svcCancelMap={
+    521:{'Neurología':1,'Clínica de Dolor':1},
+    522:{'Neurología':2,'Clínica de Dolor':2},
+    527:{'Neurología':4,'Clínica de Dolor':2,'Ondas de Choque':1},
+    529:{'Neurología':2},
+    530:{'Neurología':1},
+    602:{'Clínica de Dolor':1,'Neurología':1},
+    603:{'Neurología':2,'Clínica de Dolor':1,'Dolor y C.Paliativos':1},
+    605:{'Neurología':1},
+    606:{'Neurología':3,'Clínica de Dolor':1,'1ª vez Dolor':1},
+    609:{'Neurología':1},
+  };
+  const svcTot={};
+  days.forEach(d=>{if(svcCancelMap[d])Object.keys(svcCancelMap[d]).forEach(s=>{svcTot[s]=(svcTot[s]||0)+svcCancelMap[d][s];});});
+  document.getElementById('cupos-badge').textContent=v.wont+(v.wont===1?' cupo libre':' cupos libres');
+  document.getElementById('cupos-desc').textContent=v.wont+(v.wont===1?' paciente solicitó cancelar':' pacientes solicitaron cancelar')+' durante el período seleccionado.';
+  const svcKeys=Object.keys(svcTot);
+  document.getElementById('cupos-grid').innerHTML=svcKeys.map(s=>`
+    <div class="cp"><div class="cp-l">${s}</div><div class="cp-n">${svcTot[s]}</div><div class="cp-s">${svcTot[s]===1?'cupo':'cupos'}</div></div>
+  `).join('')+`<div class="cp-tot"><div class="cp-tot-n">${v.wont}</div><div class="cp-tot-l">Total recuperable</div></div>`;
+  if(v.wont>0){
+    const top=svcKeys.sort((a,b)=>svcTot[b]-svcTot[a]).slice(0,2).map(s=>`<strong>${s}</strong>`).join(' y ');
+    document.getElementById('cupos-alert').innerHTML=`<div class="aa">⚠ ${top} concentra${svcKeys.length>1?'n':''} la mayor parte de cancelaciones. Tasa: ${pct(v.wont,surveyed)} sobre encuestados.</div>`;
+  } else document.getElementById('cupos-alert').innerHTML='';
+
+  // DONUT
+  const nc=v.total-v.answered;
+  if(donutChart)donutChart.destroy();
+  donutChart=new Chart(document.getElementById('dc'),{
+    type:'doughnut',
+    data:{labels:['Asistirá','Cancela','Ignoró encuesta','No contactado'],
+      datasets:[{data:[v.will,v.wont,v.ignored,nc],backgroundColor:['#28a745','#dc3545','#adb5bd','#dee2e6'],borderWidth:2,borderColor:'#fff'}]},
+    options:{responsive:true,maintainAspectRatio:true,cutout:'65%',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.label+': '+fmt(c.raw)}},datalabels:{display:false}}}
+  });
+  document.getElementById('dc-legend').innerHTML=[
+    ['#28a745','Asistirá — '+fmt(v.will)+' ('+pct(v.will,v.total)+')'],
+    ['#dc3545','Cancela — '+fmt(v.wont)+' ('+pct(v.wont,v.total)+')'],
+    ['#adb5bd','Ignoró encuesta — '+fmt(v.ignored)],
+    ['#dee2e6','No contactado — '+fmt(nc)],
+  ].map(([c,t])=>`<div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text);margin-bottom:7px;"><span style="width:10px;height:10px;border-radius:3px;background:${c};flex-shrink:0;border:1px solid rgba(0,0,0,.1)"></span>${t}</div>`).join('');
+
+  // HBARS llamada
+  const hbars=[
+    {lbl:'Contestó',val:v.answered,col:'#343a40'},
+    {lbl:'No contestó',val:v.na,col:'#fd7e14'},
+    {lbl:'Buzón de voz',val:v.vm,col:'#6f42c1'},
+    {lbl:'Línea ocupada',val:v.busy,col:'#ffc107'},
+    {lbl:'Número inválido',val:v.inv,col:'#dc3545'},
+  ];
+  document.getElementById('hbar-llamada').innerHTML=hbars.map(h=>`
+    <div class="hbar">
+      <div class="hbar-lbl">${h.lbl}</div>
+      <div class="hbar-track"><div class="hbar-fill" style="width:${v.total?pctN(h.val,v.total):0}%;background:${h.col}"></div></div>
+      <div class="hbar-val">${h.val} · ${pct(h.val,v.total)}</div>
+    </div>`).join('');
+
+  // DURATION
+  const durMax=Math.max(...v.dur)||1;
+  const dLabels=['1–15 seg','16–30 seg','31–45 seg','>45 seg'];
+  const dColors=['#dc3545','#ffc107','#17a2b8','#28a745'];
+  document.getElementById('dur-grid').innerHTML=v.dur.map((d,i)=>`
+    <div>
+      <div class="dv" style="color:${dColors[i]}">${d}</div>
+      <div class="dbw"><div class="db" style="height:${Math.max(4,(d/durMax)*100)}%;background:${dColors[i]}"></div></div>
+      <div class="dl">${dLabels[i]}</div>
+      <div class="dp">${pct(d,v.answered)}</div>
+    </div>`).join('');
+  const pct45=v.answered?((v.dur[3]/v.answered)*100).toFixed(1):0;
+  document.getElementById('dur-alert').innerHTML=`<div class="at">El <strong>${pct45}%</strong> de llamadas superan los 45 segundos, indicando buena calidad de interacción.</div>`;
+
+  // SERVICIOS — aggregated from days
+  const svcAgg={};
+  const svcByDay={
+    521:{'Neurología':28,'Clínica de Dolor':14,'Dolor y C.Paliativos':7},
+    522:{'Neurología':29,'Clínica de Dolor':15,'Dolor y C.Paliativos':7},
+    523:{'Neurología':10},
+    525:{'Neurología':20,'Clínica de Dolor':5,'1ª vez Dolor':4},
+    526:{'Neurología':22,'Clínica de Dolor':9,'1ª vez Dolor':4,'Ondas de Choque':3},
+    527:{'Neurología':35,'Clínica de Dolor':12,'Ondas de Choque':6,'Toxina Botulínica':3,'Dolor y C.Paliativos':4,'1ª vez Dolor':4},
+    529:{'Neurología':21},
+    530:{'Neurología':11},
+    602:{'Neurología':18,'Clínica de Dolor':12,'Ondas de Choque':6,'Dolor y C.Paliativos':4,'1ª vez Dolor':2},
+    603:{'Neurología':38,'Clínica de Dolor':10,'Dolor y C.Paliativos':8,'Ondas de Choque':5,'1ª vez Neurología':5},
+    605:{'Neurología':19,'Clínica de Dolor':4,'1ª vez Neurología':2},
+    606:{'Neurología':31,'Clínica de Dolor':12,'1ª vez Neurología':5,'Dolor y C.Paliativos':4,'1ª vez Dolor':3},
+    609:{'Neurología':28,'Clínica de Dolor':11,'Ondas de Choque':6,'Dolor y C.Paliativos':4,'1ª vez Dolor':4,'C.Paliativos Amb.':1},
+  };
+  days.forEach(d=>{if(svcByDay[d])Object.keys(svcByDay[d]).forEach(s=>{svcAgg[s]=(svcAgg[s]||0)+svcByDay[d][s];});});
+  const svcSorted=Object.keys(svcAgg).sort((a,b)=>svcAgg[b]-svcAgg[a]);
+  document.getElementById('svc-total').textContent=fmt(v.total)+' citas programadas';
+  document.getElementById('svc-bars').innerHTML=svcSorted.map((s,i)=>`
+    <div class="br">
+      <div class="bl">${s}</div>
+      <div class="bt"><div class="bf" style="width:${pctN(svcAgg[s],v.total)}%;background:${SVC_COLORS[i%SVC_COLORS.length]}"></div></div>
+      <div class="bv"><strong>${svcAgg[s]}</strong> · ${pct(svcAgg[s],v.total)}</div>
+    </div>`).join('');
+}
+
+// ══ TENDENCIA ══════════════════════════════════════════
+function buildTendencia(){
+  const days=getRange();
+  const gc='rgba(0,0,0,0.05)', tc='#6c757d';
+  const totals=days.map(d=>DATA[d].total);
+  const answ=days.map(d=>DATA[d].answered);
+  const ratios=days.map(d=>pctN(DATA[d].answered,DATA[d].total));
+  const cancels=days.map(d=>DATA[d].wont);
+  const lbls=days.map(d=>DAY_LABELS[d]);
+
+  if(tendBarChart)tendBarChart.destroy();
+  tendBarChart=new Chart(document.getElementById('chart-tend-bar'),{
+    type:'bar',
+    data:{labels:lbls,datasets:[
+      {label:'Total',data:totals,backgroundColor:'#007bff',borderRadius:4},
+      {label:'Contactadas',data:answ,backgroundColor:'#28a745',borderRadius:4}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      layout:{padding:{top:22}},
+      plugins:{legend:{position:'bottom',labels:{font:{size:11}}},
+        datalabels:{anchor:'end',align:'top',color:'#343a40',font:{weight:'700',size:10},formatter:v=>v>0?v:''}},
+      scales:{x:{ticks:{color:tc,font:{size:11}},grid:{color:gc}},y:{beginAtZero:true,ticks:{color:tc},grid:{color:gc}}}}
+  });
+
+  if(tendContactChart)tendContactChart.destroy();
+  tendContactChart=new Chart(document.getElementById('chart-tend-contact'),{
+    type:'line',
+    data:{labels:lbls,datasets:[{data:ratios,borderColor:'#007bff',backgroundColor:'rgba(0,123,255,0.1)',tension:.35,pointRadius:5,pointBackgroundColor:'#007bff',fill:true}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        datalabels:{anchor:'top',align:'top',color:'#007bff',font:{weight:'700',size:10},formatter:v=>parseFloat(v).toFixed(1)+'%'}},
+      scales:{x:{ticks:{color:tc,font:{size:10}},grid:{color:gc}},y:{min:40,max:100,ticks:{color:tc,callback:v=>v+'%'},grid:{color:gc}}}}
+  });
+
+  if(tendCancelChart)tendCancelChart.destroy();
+  tendCancelChart=new Chart(document.getElementById('chart-tend-cancel'),{
+    type:'bar',
+    data:{labels:lbls,datasets:[{data:cancels,backgroundColor:'#dc3545',borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      layout:{padding:{top:22}},
+      plugins:{legend:{display:false},
+        datalabels:{anchor:'end',align:'top',color:'#dc3545',font:{weight:'700',size:11},formatter:v=>v>0?v:''}},
+      scales:{x:{ticks:{color:tc,font:{size:10}},grid:{color:gc}},y:{beginAtZero:true,ticks:{color:tc,stepSize:1},grid:{color:gc}}}}
+  });
+
+  // Table
+  document.getElementById('tbl-tend').innerHTML=days.map(d=>{
+    const v=DATA[d]; const s=v.will+v.wont;
+    return `<tr>
+      <td><strong>${DAY_LABELS[d]} 2026</strong></td>
+      <td>${v.total}</td><td>${v.answered}</td>
+      <td><span class="bdg ${pctN(v.answered,v.total)>=70?'b-g':'b-y'}">${pct(v.answered,v.total)}</span></td>
+      <td>${v.will}</td><td>${v.wont}</td>
+      <td>${pct(s,v.answered)}</td>
+    </tr>`;
+  }).join('')+`<tr class="tot"><td><strong>TOTAL</strong></td>
+    <td>${fmt(days.reduce((a,d)=>a+DATA[d].total,0))}</td>
+    <td>${fmt(days.reduce((a,d)=>a+DATA[d].answered,0))}</td>
+    <td><strong>${pct(days.reduce((a,d)=>a+DATA[d].answered,0),days.reduce((a,d)=>a+DATA[d].total,0))}</strong></td>
+    <td>${days.reduce((a,d)=>a+DATA[d].will,0)}</td>
+    <td>${days.reduce((a,d)=>a+DATA[d].wont,0)}</td>
+    <td>—</td></tr>`;
+}
+
+// ══ SEDES ══════════════════════════════════════════════
+function buildSedes(){
+  const days=getRange();
+  const v=agg(days);
+  const gc='rgba(0,0,0,0.05)', tc='#6c757d';
+
+  if(sedeChart)sedeChart.destroy();
+  sedeChart=new Chart(document.getElementById('chart-sedes'),{
+    type:'bar',
+    data:{labels:['IPS Fundación','Nova Local 108'],
+      datasets:[
+        {label:'Total citas',data:[v.sede.f.t,v.sede.n.t],backgroundColor:'#007bff',borderRadius:4},
+        {label:'Contactadas',data:[v.sede.f.a,v.sede.n.a],backgroundColor:'#28a745',borderRadius:4},
+        {label:'Confirman',data:[v.sede.f.will,v.sede.n.will],backgroundColor:'#20c997',borderRadius:4},
+      ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      layout:{padding:{top:22}},
+      plugins:{legend:{position:'bottom',labels:{font:{size:11}}},
+        datalabels:{anchor:'end',align:'top',color:'#343a40',font:{weight:'700',size:11},formatter:v=>v>0?v:''}},
+      scales:{y:{beginAtZero:true,grid:{color:gc}},x:{grid:{color:gc}}}}
+  });
+
+  if(sedeRatioChart)sedeRatioChart.destroy();
+  sedeRatioChart=new Chart(document.getElementById('chart-sedes-ratio'),{
+    type:'bar',
+    data:{labels:['IPS Fundación','Nova Local 108'],
+      datasets:[{
+        label:'Contact ratio %',
+        data:[pctN(v.sede.f.a,v.sede.f.t),pctN(v.sede.n.a,v.sede.n.t)],
+        backgroundColor:['#007bff','#17a2b8'],borderRadius:4
+      }]},
+    options:{responsive:true,maintainAspectRatio:false,
+      layout:{padding:{top:22}},
+      plugins:{legend:{display:false},
+        datalabels:{anchor:'end',align:'top',color:'#343a40',font:{weight:'700',size:12},formatter:v=>v.toFixed(1)+'%'}},
+      scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%'},grid:{color:gc}}}}
+  });
+
+  // Table
+  document.getElementById('tbl-sedes').innerHTML=`
+    <tr>
+      <td><strong>Sede IPS Fundación</strong><br><span style="font-size:10px;color:var(--text2)">Barrio Recreo, Cra 80B #31C-08</span></td>
+      <td>${v.sede.f.t}</td><td>${v.sede.f.a}</td>
+      <td><span class="bdg b-g">${pct(v.sede.f.a,v.sede.f.t)}</span></td>
+      <td>${v.sede.f.will}</td><td>${v.sede.f.wont}</td>
+    </tr>
+    <tr>
+      <td><strong>Sede Nova Local 108</strong><br><span style="font-size:10px;color:var(--text2)">C.C. San Felipe, Local 107-108</span></td>
+      <td>${v.sede.n.t}</td><td>${v.sede.n.a}</td>
+      <td><span class="bdg b-b">${pct(v.sede.n.a,v.sede.n.t)}</span></td>
+      <td>${v.sede.n.will}</td><td>${v.sede.n.wont}</td>
+    </tr>
+    <tr class="tot">
+      <td><strong>TOTAL</strong></td>
+      <td><strong>${v.sede.f.t+v.sede.n.t}</strong></td>
+      <td><strong>${v.sede.f.a+v.sede.n.a}</strong></td>
+      <td><strong>${pct(v.sede.f.a+v.sede.n.a,v.sede.f.t+v.sede.n.t)}</strong></td>
+      <td><strong>${v.sede.f.will+v.sede.n.will}</strong></td>
+      <td><strong>${v.sede.f.wont+v.sede.n.wont}</strong></td>
+    </tr>`;
+}
+
+// ══ DETALLE TABLE ══════════════════════════════════════
+// (Muestra registros del día seleccionado si es fecha específica,
+//  o todos los días disponibles si es rango/mes)
+const SAMPLE_ROWS=[
+  {fecha:'9 jun',nombre:'JUVENAL MARQUEZ GONZALEZ',hora:'3:45 PM',sede:'IPS Fundación',svc:'Control Neurología',int:3,disp:'ANSWER',dur:129,resp:'ASISTIRÁ'},
+  {fecha:'9 jun',nombre:'RODIMIRO TORRES REHENALS',hora:'4:00 PM',sede:'IPS Fundación',svc:'Control Neurología',int:5,disp:'ANSWER',dur:129,resp:'ASISTIRÁ'},
+  {fecha:'9 jun',nombre:'RAIMUNDO DAGER MORALES',hora:'5:00 PM',sede:'IPS Fundación',svc:'Control Neurología',int:2,disp:'ANSWER',dur:74,resp:'ASISTIRÁ'},
+  {fecha:'9 jun',nombre:'DANERIS MARMOLEJO SILVA',hora:'4:20 PM',sede:'Nova Local 108',svc:'Control Neurología',int:2,disp:'ANSWER',dur:73,resp:'ASISTIRÁ'},
+  {fecha:'9 jun',nombre:'ALBA VILLARREAL CASTILLO',hora:'11:45 AM',sede:'Nova Local 108',svc:'Clínica de Dolor',int:2,disp:'ANSWER',dur:71,resp:'ASISTIRÁ'},
+  {fecha:'9 jun',nombre:'MAYERLYS SALCEDO COVO',hora:'4:15 PM',sede:'IPS Fundación',svc:'Control Neurología',int:3,disp:'ANSWER',dur:78,resp:'CANCELA'},
+  {fecha:'9 jun',nombre:'OMAR POLO BAHOQUE',hora:'4:30 PM',sede:'IPS Fundación',svc:'Control Neurología',int:6,disp:'NO ANSWER',dur:0,resp:'—'},
+  {fecha:'9 jun',nombre:'ALEXIS CORONEL DE HERRERA',hora:'2:40 PM',sede:'Nova Local 108',svc:'Control Neurología',int:6,disp:'NO ANSWER',dur:0,resp:'—'},
+  {fecha:'9 jun',nombre:'CELIA MEDINA PANIZA',hora:'4:45 PM',sede:'IPS Fundación',svc:'Control Neurología',int:6,disp:'VOICEMAIL',dur:0,resp:'—'},
+  {fecha:'9 jun',nombre:'LAURA CORTECERO NIEVES',hora:'12:45 PM',sede:'Nova Local 108',svc:'C. Paliativos Amb.',int:6,disp:'VOICEMAIL',dur:0,resp:'—'},
+  {fecha:'6 jun',nombre:'DIVYS GARCIA BARRIOS',hora:'10:30 AM',sede:'IPS Fundación',svc:'1ª vez Neurología',int:3,disp:'ANSWER',dur:126,resp:'ASISTIRÁ'},
+  {fecha:'6 jun',nombre:'MYRIAM VALLEJO PEREZ',hora:'8:15 AM',sede:'IPS Fundación',svc:'Control Neurología',int:6,disp:'ANSWER',dur:76,resp:'ASISTIRÁ'},
+  {fecha:'6 jun',nombre:'LUZ PARRA ACELAS',hora:'9:40 AM',sede:'Nova Local 108',svc:'Control Neurología',int:6,disp:'ANSWER',dur:71,resp:'ASISTIRÁ'},
+  {fecha:'3 jun',nombre:'VIVIANA MONTESINO CARDONA',hora:'2:45 PM',sede:'IPS Fundación',svc:'Control Neurología',int:3,disp:'ANSWER',dur:78,resp:'ASISTIRÁ'},
+  {fecha:'3 jun',nombre:'YOLANDA BOSSA VENENCIA',hora:'8:45 AM',sede:'IPS Fundación',svc:'Control Neurología',int:2,disp:'ANSWER',dur:76,resp:'ASISTIRÁ'},
+  {fecha:'2 jun',nombre:'SORIS PETRO PETRO',hora:'9:00 AM',sede:'Nova Local 108',svc:'Dolor y C.Paliativos',int:1,disp:'ANSWER',dur:172,resp:'ASISTIRÁ'},
+  {fecha:'27 may',nombre:'DARLENE CASTRO PEREZ',hora:'12:20 PM',sede:'Nova Local 108',svc:'Control Neurología',int:3,disp:'ANSWER',dur:132,resp:'ASISTIRÁ'},
+  {fecha:'27 may',nombre:'LILIANA LOPEZ ARANA',hora:'5:45 PM',sede:'IPS Fundación',svc:'Clínica de Dolor',int:1,disp:'ANSWER',dur:124,resp:'ASISTIRÁ'},
+  {fecha:'27 may',nombre:'HILDA SIERRA CUENTAS',hora:'12:15 PM',sede:'IPS Fundación',svc:'Control Neurología',int:5,disp:'ANSWER',dur:77,resp:'CANCELA'},
+  {fecha:'22 may',nombre:'NELLY CARABALLO HERRERA',hora:'10:15 AM',sede:'IPS Fundación',svc:'Control Neurología',int:2,disp:'ANSWER',dur:124,resp:'ASISTIRÁ'},
+  {fecha:'22 may',nombre:'DANILO BARRETO CALLE',hora:'3:30 PM',sede:'IPS Fundación',svc:'Clínica de Dolor',int:5,disp:'ANSWER',dur:72,resp:'CANCELA'},
+  {fecha:'21 may',nombre:'SIRLEY REBOLLEDO TORRES',hora:'10:10 AM',sede:'IPS Fundación',svc:'Clínica de Dolor',int:3,disp:'ANSWER',dur:117,resp:'ASISTIRÁ'},
+  {fecha:'21 may',nombre:'ANA PENA PATERNINA',hora:'8:30 AM',sede:'IPS Fundación',svc:'Clínica de Dolor',int:2,disp:'ANSWER',dur:114,resp:'ASISTIRÁ'},
 ];
 
-function dispBadge(d){
-  const map={
-    'ANSWER':'<span class="bdg b-g">ANSWER</span>',
-    'NO ANSWER':'<span class="bdg b-r">NO ANSWER</span>',
-    'VOICEMAIL':'<span class="bdg b-y">VOICEMAIL</span>',
-    'INVALID':'<span class="bdg b-c">INVALID</span>',
-    'BUSY':'<span class="bdg" style="background:#ffe5d0;color:#7c2d12;">BUSY</span>',
-  };
-  return map[d]||d;
-}
+function dispBadge(d){const m={'ANSWER':'b-g','NO ANSWER':'b-r','VOICEMAIL':'b-y','INVALID':'b-c','BUSY':'b-p'};return `<span class="bdg ${m[d]||''}">${d}</span>`;}
+function respBadge(r){if(r==='ASISTIRÁ')return'<span class="bdg b-g">✔ Asistirá</span>';if(r==='CANCELA')return'<span class="bdg b-r">✖ Cancela</span>';return'<span style="color:#ccc">—</span>';}
 
-function respBadge(r){
-  if(r==='ASISTIRÁ A LA CITA') return '<span class="bdg b-g">✔ Asistirá</span>';
-  if(r==='SOLICITA CANCELAR') return '<span class="bdg b-r">✖ Cancela</span>';
-  if(r==='Pendiente') return '<span class="bdg b-y">⟳ Pendiente</span>';
-  return '<span style="color:#aaa">—</span>';
-}
-
-function buildTable(){
-  const sede=document.getElementById('filt-sede').value;
-  const disp=document.getElementById('filt-disp').value;
-  let rows=pacientes.filter(p=>{
-    const sedeOk=sede==='todas'||(sede==='fundacion'&&p.sede==='IPS Fundación')||(sede==='nova'&&p.sede==='Nova Local 108');
-    const dispOk=disp==='todas'||p.disp===disp;
-    return sedeOk&&dispOk;
+function buildDetailTable(){
+  const sede=document.getElementById('f-sede').value;
+  const disp=document.getElementById('f-disp').value;
+  const rows=SAMPLE_ROWS.filter(p=>{
+    const s=sede==='todas'||(sede==='fundacion'&&p.sede==='IPS Fundación')||(sede==='nova'&&p.sede==='Nova Local 108');
+    const d=disp==='todas'||p.disp===disp;
+    return s&&d;
   });
-  document.getElementById('tbl-body').innerHTML=rows.map(p=>`
+  document.getElementById('tbl-body').innerHTML=rows.map((p,i)=>`
     <tr>
-      <td style="color:var(--text2)">${p.n}</td>
-      <td><strong>${p.nombre}</strong></td>
-      <td>${p.hora}</td>
+      <td style="color:var(--text2)">${i+1}</td>
+      <td><strong>${p.fecha}</strong></td>
+      <td>${p.nombre}</td><td>${p.hora}</td>
       <td style="font-size:11px">${p.sede}</td>
-      <td style="font-size:11px">${p.servicio}</td>
-      <td style="font-size:11px">${p.prof}</td>
-      <td style="text-align:center">${p.intentos}</td>
+      <td style="font-size:11px">${p.svc}</td>
+      <td style="text-align:center">${p.int}</td>
       <td>${dispBadge(p.disp)}</td>
       <td>${p.dur>0?p.dur+'s':'—'}</td>
       <td>${respBadge(p.resp)}</td>
-    </tr>
-  `).join('');
-  document.getElementById('contador-tbl').textContent=`${rows.length} registros`;
+    </tr>`).join('');
+  document.getElementById('tbl-count').textContent=rows.length+' registros (muestra representativa)';
 }
 
-function filtrarTabla(){ buildTable(); }
+// ══ INIT ════════════════════════════════════════════════
+onPeriodo();
 </script>
 </body>
 </html>
