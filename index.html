@@ -383,9 +383,15 @@ function st(id){
   const ids=['resumen','tendencia','sedes','detalle'];
   document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',ids[i]===id));
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='p-'+id));
-  if(id==='tendencia')buildTendencia();
-  if(id==='sedes')buildSedes();
-  if(id==='detalle')buildDetailTable();
+  rebuildActive();
+}
+function rebuildActive(){
+  const a=document.querySelector('.page.active');
+  if(!a) return;
+  const id=a.id.replace('p-','');
+  if(id==='tendencia') buildTendencia();
+  else if(id==='sedes') buildSedes();
+  else if(id==='detalle') buildDetailTable();
 }
 
 // ══ FILTER ═════════════════════════════════════════════
@@ -532,6 +538,8 @@ function applyFilter(){
       <div class="bt"><div class="bf" style="width:${pctN(svcAgg[s],v.total)}%;background:${SVC_COLORS[i%SVC_COLORS.length]}"></div></div>
       <div class="bv"><strong>${svcAgg[s]}</strong> · ${pct(svcAgg[s],v.total)}</div>
     </div>`).join('');
+  // Rebuild whichever non-resumen tab is active
+  rebuildActive();
 }
 
 // ══ TENDENCIA ══════════════════════════════════════════
@@ -693,14 +701,17 @@ function dispBadge(d){const m={'ANSWER':'b-g','NO ANSWER':'b-r','VOICEMAIL':'b-y
 function respBadge(r){if(r==='ASISTIRÁ')return'<span class="bdg b-g">✔ Asistirá</span>';if(r==='CANCELA')return'<span class="bdg b-r">✖ Cancela</span>';return'<span style="color:#ccc">—</span>';}
 
 function buildDetailTable(){
+  const days=getRange();
+  const daySet=new Set(days.map(d=>DAY_LABELS[d]));
   const sede=document.getElementById('f-sede').value;
   const disp=document.getElementById('f-disp').value;
   const rows=SAMPLE_ROWS.filter(p=>{
+    const inDays=daySet.has(p.fecha);
     const s=sede==='todas'||(sede==='fundacion'&&p.sede==='IPS Fundación')||(sede==='nova'&&p.sede==='Nova Local 108');
     const d=disp==='todas'||p.disp===disp;
-    return s&&d;
+    return inDays&&s&&d;
   });
-  document.getElementById('tbl-body').innerHTML=rows.map((p,i)=>`
+  document.getElementById('tbl-body').innerHTML=rows.length>0?rows.map((p,i)=>`
     <tr>
       <td style="color:var(--text2)">${i+1}</td>
       <td><strong>${p.fecha}</strong></td>
@@ -711,8 +722,8 @@ function buildDetailTable(){
       <td>${dispBadge(p.disp)}</td>
       <td>${p.dur>0?p.dur+'s':'—'}</td>
       <td>${respBadge(p.resp)}</td>
-    </tr>`).join('');
-  document.getElementById('tbl-count').textContent=rows.length+' registros (muestra representativa)';
+    </tr>`).join(''):'<tr><td colspan="10" style="text-align:center;color:var(--text2);padding:20px">Sin registros para el período seleccionado</td></tr>';
+  document.getElementById('tbl-count').textContent=rows.length+' registros';
 }
 
 // ══ INIT ════════════════════════════════════════════════
