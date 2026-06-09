@@ -123,7 +123,6 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
   <div class="tab active" onclick="st('resumen')">Resumen ejecutivo</div>
   <div class="tab" onclick="st('tendencia')">Tendencia diaria</div>
   <div class="tab" onclick="st('sedes')">Por sede</div>
-  <div class="tab" onclick="st('detalle')">Detalle pacientes</div>
 </div>
 
 <div class="filterbar">
@@ -283,36 +282,6 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
   </div>
 </div>
 
-<!-- ══ DETALLE ══ -->
-<div class="page" id="p-detalle">
-  <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
-    <label style="font-size:12px;color:var(--text2)">Sede:</label>
-    <select id="f-sede" onchange="buildDetailTable()" class="fsel">
-      <option value="todas">Todas las sedes</option>
-      <option value="fundacion">IPS Fundación</option>
-      <option value="nova">Nova Local 108</option>
-    </select>
-    <label style="font-size:12px;color:var(--text2)">Disposición:</label>
-    <select id="f-disp" onchange="buildDetailTable()" class="fsel">
-      <option value="todas">Todas</option>
-      <option value="ANSWER">ANSWER</option>
-      <option value="NO ANSWER">NO ANSWER</option>
-      <option value="VOICEMAIL">VOICEMAIL</option>
-      <option value="INVALID">INVALID</option>
-      <option value="BUSY">BUSY</option>
-    </select>
-    <span id="tbl-count" style="font-size:12px;color:var(--text2);margin-left:auto;"></span>
-  </div>
-  <div class="card" style="padding:0;">
-    <div class="tbl-wrap">
-    <table class="tbl">
-      <thead><tr><th>#</th><th>Fecha</th><th>Paciente</th><th>Hora</th><th>Sede</th><th>Servicio</th><th>Intentos</th><th>Disposición</th><th>Duración</th><th>Respuesta</th></tr></thead>
-      <tbody id="tbl-body"></tbody>
-    </table>
-    </div>
-  </div>
-</div>
-
 </div>
 
 <script>
@@ -380,7 +349,7 @@ function pctN(a,b){return b?parseFloat(((a/b)*100).toFixed(1)):0;}
 
 // ══ NAV ════════════════════════════════════════════════
 function st(id){
-  const ids=['resumen','tendencia','sedes','detalle'];
+  const ids=['resumen','tendencia','sedes'];
   document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',ids[i]===id));
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='p-'+id));
   rebuildActive();
@@ -391,7 +360,6 @@ function rebuildActive(){
   const id=a.id.replace('p-','');
   if(id==='tendencia') buildTendencia();
   else if(id==='sedes') buildSedes();
-  else if(id==='detalle') buildDetailTable();
 }
 
 // ══ FILTER ═════════════════════════════════════════════
@@ -669,62 +637,7 @@ function buildSedes(){
 }
 
 // ══ DETALLE TABLE ══════════════════════════════════════
-// (Muestra registros del día seleccionado si es fecha específica,
-//  o todos los días disponibles si es rango/mes)
-const SAMPLE_ROWS=[
-  {fecha:'9 jun',nombre:'JUVENAL MARQUEZ GONZALEZ',hora:'3:45 PM',sede:'IPS Fundación',svc:'Control Neurología',int:3,disp:'ANSWER',dur:129,resp:'ASISTIRÁ'},
-  {fecha:'9 jun',nombre:'RODIMIRO TORRES REHENALS',hora:'4:00 PM',sede:'IPS Fundación',svc:'Control Neurología',int:5,disp:'ANSWER',dur:129,resp:'ASISTIRÁ'},
-  {fecha:'9 jun',nombre:'RAIMUNDO DAGER MORALES',hora:'5:00 PM',sede:'IPS Fundación',svc:'Control Neurología',int:2,disp:'ANSWER',dur:74,resp:'ASISTIRÁ'},
-  {fecha:'9 jun',nombre:'DANERIS MARMOLEJO SILVA',hora:'4:20 PM',sede:'Nova Local 108',svc:'Control Neurología',int:2,disp:'ANSWER',dur:73,resp:'ASISTIRÁ'},
-  {fecha:'9 jun',nombre:'ALBA VILLARREAL CASTILLO',hora:'11:45 AM',sede:'Nova Local 108',svc:'Clínica de Dolor',int:2,disp:'ANSWER',dur:71,resp:'ASISTIRÁ'},
-  {fecha:'9 jun',nombre:'MAYERLYS SALCEDO COVO',hora:'4:15 PM',sede:'IPS Fundación',svc:'Control Neurología',int:3,disp:'ANSWER',dur:78,resp:'CANCELA'},
-  {fecha:'9 jun',nombre:'OMAR POLO BAHOQUE',hora:'4:30 PM',sede:'IPS Fundación',svc:'Control Neurología',int:6,disp:'NO ANSWER',dur:0,resp:'—'},
-  {fecha:'9 jun',nombre:'ALEXIS CORONEL DE HERRERA',hora:'2:40 PM',sede:'Nova Local 108',svc:'Control Neurología',int:6,disp:'NO ANSWER',dur:0,resp:'—'},
-  {fecha:'9 jun',nombre:'CELIA MEDINA PANIZA',hora:'4:45 PM',sede:'IPS Fundación',svc:'Control Neurología',int:6,disp:'VOICEMAIL',dur:0,resp:'—'},
-  {fecha:'9 jun',nombre:'LAURA CORTECERO NIEVES',hora:'12:45 PM',sede:'Nova Local 108',svc:'C. Paliativos Amb.',int:6,disp:'VOICEMAIL',dur:0,resp:'—'},
-  {fecha:'6 jun',nombre:'DIVYS GARCIA BARRIOS',hora:'10:30 AM',sede:'IPS Fundación',svc:'1ª vez Neurología',int:3,disp:'ANSWER',dur:126,resp:'ASISTIRÁ'},
-  {fecha:'6 jun',nombre:'MYRIAM VALLEJO PEREZ',hora:'8:15 AM',sede:'IPS Fundación',svc:'Control Neurología',int:6,disp:'ANSWER',dur:76,resp:'ASISTIRÁ'},
-  {fecha:'6 jun',nombre:'LUZ PARRA ACELAS',hora:'9:40 AM',sede:'Nova Local 108',svc:'Control Neurología',int:6,disp:'ANSWER',dur:71,resp:'ASISTIRÁ'},
-  {fecha:'3 jun',nombre:'VIVIANA MONTESINO CARDONA',hora:'2:45 PM',sede:'IPS Fundación',svc:'Control Neurología',int:3,disp:'ANSWER',dur:78,resp:'ASISTIRÁ'},
-  {fecha:'3 jun',nombre:'YOLANDA BOSSA VENENCIA',hora:'8:45 AM',sede:'IPS Fundación',svc:'Control Neurología',int:2,disp:'ANSWER',dur:76,resp:'ASISTIRÁ'},
-  {fecha:'2 jun',nombre:'SORIS PETRO PETRO',hora:'9:00 AM',sede:'Nova Local 108',svc:'Dolor y C.Paliativos',int:1,disp:'ANSWER',dur:172,resp:'ASISTIRÁ'},
-  {fecha:'27 may',nombre:'DARLENE CASTRO PEREZ',hora:'12:20 PM',sede:'Nova Local 108',svc:'Control Neurología',int:3,disp:'ANSWER',dur:132,resp:'ASISTIRÁ'},
-  {fecha:'27 may',nombre:'LILIANA LOPEZ ARANA',hora:'5:45 PM',sede:'IPS Fundación',svc:'Clínica de Dolor',int:1,disp:'ANSWER',dur:124,resp:'ASISTIRÁ'},
-  {fecha:'27 may',nombre:'HILDA SIERRA CUENTAS',hora:'12:15 PM',sede:'IPS Fundación',svc:'Control Neurología',int:5,disp:'ANSWER',dur:77,resp:'CANCELA'},
-  {fecha:'22 may',nombre:'NELLY CARABALLO HERRERA',hora:'10:15 AM',sede:'IPS Fundación',svc:'Control Neurología',int:2,disp:'ANSWER',dur:124,resp:'ASISTIRÁ'},
-  {fecha:'22 may',nombre:'DANILO BARRETO CALLE',hora:'3:30 PM',sede:'IPS Fundación',svc:'Clínica de Dolor',int:5,disp:'ANSWER',dur:72,resp:'CANCELA'},
-  {fecha:'21 may',nombre:'SIRLEY REBOLLEDO TORRES',hora:'10:10 AM',sede:'IPS Fundación',svc:'Clínica de Dolor',int:3,disp:'ANSWER',dur:117,resp:'ASISTIRÁ'},
-  {fecha:'21 may',nombre:'ANA PENA PATERNINA',hora:'8:30 AM',sede:'IPS Fundación',svc:'Clínica de Dolor',int:2,disp:'ANSWER',dur:114,resp:'ASISTIRÁ'},
-];
 
-function dispBadge(d){const m={'ANSWER':'b-g','NO ANSWER':'b-r','VOICEMAIL':'b-y','INVALID':'b-c','BUSY':'b-p'};return `<span class="bdg ${m[d]||''}">${d}</span>`;}
-function respBadge(r){if(r==='ASISTIRÁ')return'<span class="bdg b-g">✔ Asistirá</span>';if(r==='CANCELA')return'<span class="bdg b-r">✖ Cancela</span>';return'<span style="color:#ccc">—</span>';}
-
-function buildDetailTable(){
-  const days=getRange();
-  const daySet=new Set(days.map(d=>DAY_LABELS[d]));
-  const sede=document.getElementById('f-sede').value;
-  const disp=document.getElementById('f-disp').value;
-  const rows=SAMPLE_ROWS.filter(p=>{
-    const inDays=daySet.has(p.fecha);
-    const s=sede==='todas'||(sede==='fundacion'&&p.sede==='IPS Fundación')||(sede==='nova'&&p.sede==='Nova Local 108');
-    const d=disp==='todas'||p.disp===disp;
-    return inDays&&s&&d;
-  });
-  document.getElementById('tbl-body').innerHTML=rows.length>0?rows.map((p,i)=>`
-    <tr>
-      <td style="color:var(--text2)">${i+1}</td>
-      <td><strong>${p.fecha}</strong></td>
-      <td>${p.nombre}</td><td>${p.hora}</td>
-      <td style="font-size:11px">${p.sede}</td>
-      <td style="font-size:11px">${p.svc}</td>
-      <td style="text-align:center">${p.int}</td>
-      <td>${dispBadge(p.disp)}</td>
-      <td>${p.dur>0?p.dur+'s':'—'}</td>
-      <td>${respBadge(p.resp)}</td>
-    </tr>`).join(''):'<tr><td colspan="10" style="text-align:center;color:var(--text2);padding:20px">Sin registros para el período seleccionado</td></tr>';
-  document.getElementById('tbl-count').textContent=rows.length+' registros';
-}
 
 // ══ INIT ════════════════════════════════════════════════
 onPeriodo();
