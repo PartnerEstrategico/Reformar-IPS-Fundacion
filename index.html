@@ -129,7 +129,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
   <label>Período:</label>
   <select class="fsel" id="periodo-sel" onchange="onPeriodo()">
     <option value="may">Mayo 2026 (8 días)</option>
-    <option value="jun">Junio 2026 (7 días)</option>
+    <option value="jun">Junio 2026 (8 días)</option>
     <option value="todos">Todos los períodos</option>
     <option value="fecha" selected>Fecha específica</option>
     <option value="rango">Rango personalizado</option>
@@ -151,7 +151,8 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
       <option value="606">6 jun 2026</option>
       <option value="609">9 jun 2026</option>
       <option value="610">10 jun 2026</option>
-      <option value="612" selected>12 jun 2026</option>
+      <option value="612">12 jun 2026</option>
+      <option value="613" selected>13 jun 2026</option>
     </select>
   </div>
   <div id="rango-wrap" class="fdate-wrap">
@@ -172,6 +173,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
       <option value="609">9 jun 2026</option>
       <option value="610">10 jun 2026</option>
       <option value="612">12 jun 2026</option>
+      <option value="613">13 jun 2026</option>
     </select>
     <label>Hasta:</label>
     <select class="fsel" id="rango-hasta" onchange="applyFilter()">
@@ -189,7 +191,8 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
       <option value="606">6 jun 2026</option>
       <option value="609">9 jun 2026</option>
       <option value="610">10 jun 2026</option>
-      <option value="612" selected>12 jun 2026</option>
+      <option value="612">12 jun 2026</option>
+      <option value="613" selected>13 jun 2026</option>
     </select>
   </div>
   <span class="pill-b" id="pill-citas">—</span>
@@ -312,12 +315,13 @@ const DATA = {
   609:{total:54, answered:41, vm:4,  na:7,  busy:1, inv:1, will:27, wont:1,  ignored:13, dur:[5,2,2,32]},
   610:{total:76, answered:55, vm:8,  na:13, busy:0, inv:0, will:43, wont:2,  ignored:10, dur:[4,2,3,46]},
   612:{total:29, answered:20, vm:3,  na:6,  busy:0, inv:0, will:11, wont:1,  ignored:8,  dur:[3,1,1,15]},
+  613:{total:40, answered:26, vm:5,  na:8,  busy:0, inv:1, will:20, wont:0,  ignored:6,  dur:[1,0,1,24]},
 };
 
-const ALL_DAYS=[521,522,523,525,526,527,529,530,602,603,605,606,609,610,612];
+const ALL_DAYS=[521,522,523,525,526,527,529,530,602,603,605,606,609,610,612,613];
 const MAY_DAYS=[521,522,523,525,526,527,529,530];
-const JUN_DAYS=[602,603,605,606,609,610,612];
-const DAY_LABELS={521:'21 may',522:'22 may',523:'23 may',525:'25 may',526:'26 may',527:'27 may',529:'29 may',530:'30 may',602:'2 jun',603:'3 jun',605:'5 jun',606:'6 jun',609:'9 jun',610:'10 jun',612:'12 jun'};
+const JUN_DAYS=[602,603,605,606,609,610,612,613];
+const DAY_LABELS={521:'21 may',522:'22 may',523:'23 may',525:'25 may',526:'26 may',527:'27 may',529:'29 may',530:'30 may',602:'2 jun',603:'3 jun',605:'5 jun',606:'6 jun',609:'9 jun',610:'10 jun',612:'12 jun',613:'13 jun'};
 const SVC_COLORS=['#007bff','#20c997','#17a2b8','#6610f2','#6f42c1','#e83e8c','#fd7e14'];
 
 // Sedes data per day (fundacion / nova)
@@ -337,6 +341,7 @@ const SEDE_DATA = {
   609:{f:{t:15,a:13,will:10,wont:1}, n:{t:39,a:28,will:17,wont:0}},
   610:{f:{t:61,a:46,will:38,wont:1}, n:{t:15,a:9,will:5,wont:1}},
   612:{f:{t:17,a:11,will:5,wont:1},  n:{t:12,a:9,will:6,wont:0}},
+  613:{f:{t:40,a:26,will:20,wont:0}, n:{t:0,a:0,will:0,wont:0}},
 };
 
 // Aggregated function
@@ -432,6 +437,7 @@ function applyFilter(){
     609:{'Neurología':1},
     610:{'Neurología':1,'Clínica de Dolor':1},
     612:{'Neurología':1},
+    // 613: sin cancelaciones
   };
   const svcTot={};
   days.forEach(d=>{if(svcCancelMap[d])Object.keys(svcCancelMap[d]).forEach(s=>{svcTot[s]=(svcTot[s]||0)+svcCancelMap[d][s];});});
@@ -510,6 +516,7 @@ function applyFilter(){
     609:{'Neurología':28,'Clínica de Dolor':11,'Ondas de Choque':6,'Dolor y C.Paliativos':4,'1ª vez Dolor':4,'C.Paliativos Amb.':1},
     610:{'Neurología':49,'Clínica de Dolor':17,'Dolor y C.Paliativos':4,'1ª vez Dolor':4,'1ª vez Neurología':2},
     612:{'Neurología':23,'1ª vez Neurología':6},
+    613:{'Clínica de Dolor':28,'1ª vez Neurología':5,'Neurología':5,'Dolor y C.Paliativos':2},
   };
   days.forEach(d=>{if(svcByDay[d])Object.keys(svcByDay[d]).forEach(s=>{svcAgg[s]=(svcAgg[s]||0)+svcByDay[d][s];});});
   const svcSorted=Object.keys(svcAgg).sort((a,b)=>svcAgg[b]-svcAgg[a]);
