@@ -129,7 +129,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
   <label>Período:</label>
   <select class="fsel" id="periodo-sel" onchange="onPeriodo()">
     <option value="may">Mayo 2026 (8 días)</option>
-    <option value="jun">Junio 2026 (17 días)</option>
+    <option value="jun">Junio 2026 (18 días)</option>
     <option value="todos">Todos los períodos</option>
     <option value="fecha" selected>Fecha específica</option>
     <option value="rango">Rango personalizado</option>
@@ -161,7 +161,8 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
       <option value="622">22 jun 2026</option>
       <option value="623">23 jun 2026</option>
       <option value="624">24 jun 2026</option>
-      <option value="625" selected>25 jun 2026</option>
+      <option value="625">25 jun 2026</option>
+      <option value="626" selected>26 jun 2026</option>
     </select>
   </div>
   <div id="rango-wrap" class="fdate-wrap">
@@ -192,6 +193,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
       <option value="623">23 jun 2026</option>
       <option value="624">24 jun 2026</option>
       <option value="625">25 jun 2026</option>
+      <option value="626">26 jun 2026</option>
     </select>
     <label>Hasta:</label>
     <select class="fsel" id="rango-hasta" onchange="applyFilter()">
@@ -219,7 +221,8 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
       <option value="622">22 jun 2026</option>
       <option value="623">23 jun 2026</option>
       <option value="624">24 jun 2026</option>
-      <option value="625" selected>25 jun 2026</option>
+      <option value="625">25 jun 2026</option>
+      <option value="626" selected>26 jun 2026</option>
     </select>
   </div>
   <span class="pill-b" id="pill-citas">—</span>
@@ -352,12 +355,13 @@ const DATA = {
   623:{total:55, answered:36, vm:6,  na:13, busy:0, inv:0, will:33, wont:1,  ignored:2,  dur:[0,0,4,32]},
   624:{total:67, answered:48, vm:5,  na:13, busy:0, inv:1, will:37, wont:2,  ignored:9,  dur:[2,1,3,42]},
   625:{total:45, answered:26, vm:5,  na:12, busy:2, inv:0, will:19, wont:1,  ignored:6,  dur:[2,3,0,21]},
+  626:{total:27, answered:13, vm:2,  na:11, busy:1, inv:0, will:10, wont:0,  ignored:3,  dur:[0,1,1,11]},
 };
 
-const ALL_DAYS=[521,522,523,525,526,527,529,530,602,603,605,606,609,610,612,613,616,617,618,619,620,622,623,624,625];
+const ALL_DAYS=[521,522,523,525,526,527,529,530,602,603,605,606,609,610,612,613,616,617,618,619,620,622,623,624,625,626];
 const MAY_DAYS=[521,522,523,525,526,527,529,530];
-const JUN_DAYS=[602,603,605,606,609,610,612,613,616,617,618,619,620,622,623,624,625];
-const DAY_LABELS={521:'21 may',522:'22 may',523:'23 may',525:'25 may',526:'26 may',527:'27 may',529:'29 may',530:'30 may',602:'2 jun',603:'3 jun',605:'5 jun',606:'6 jun',609:'9 jun',610:'10 jun',612:'12 jun',613:'13 jun',616:'16 jun',617:'17 jun',618:'18 jun',619:'19 jun',620:'20 jun',622:'22 jun',623:'23 jun',624:'24 jun',625:'25 jun'};
+const JUN_DAYS=[602,603,605,606,609,610,612,613,616,617,618,619,620,622,623,624,625,626];
+const DAY_LABELS={521:'21 may',522:'22 may',523:'23 may',525:'25 may',526:'26 may',527:'27 may',529:'29 may',530:'30 may',602:'2 jun',603:'3 jun',605:'5 jun',606:'6 jun',609:'9 jun',610:'10 jun',612:'12 jun',613:'13 jun',616:'16 jun',617:'17 jun',618:'18 jun',619:'19 jun',620:'20 jun',622:'22 jun',623:'23 jun',624:'24 jun',625:'25 jun',626:'26 jun'};
 const SVC_COLORS=['#007bff','#20c997','#17a2b8','#6610f2','#6f42c1','#e83e8c','#fd7e14'];
 
 // Sedes data per day (fundacion / nova)
@@ -387,6 +391,7 @@ const SEDE_DATA = {
   623:{f:{t:15,a:9,will:9,wont:0},  n:{t:40,a:27,will:24,wont:1}},
   624:{f:{t:47,a:34,will:24,wont:1}, n:{t:20,a:14,will:13,wont:1}},
   625:{f:{t:43,a:25,will:18,wont:1}, n:{t:2,a:1,will:1,wont:0}},
+  626:{f:{t:15,a:7,will:6,wont:0},  n:{t:12,a:6,will:4,wont:0}},
 };
 
 // Aggregated function
@@ -577,6 +582,7 @@ function applyFilter(){
     623:{'Neurología':22,'Clínica de Dolor':17,'1ª vez Neurología':6,'Ondas de Choque':5,'Dolor y C.Paliativos':4,'1ª vez Dolor':1},
     624:{'Neurología':35,'Clínica de Dolor':12,'1ª vez Dolor':5,'Toxina Botulínica':4,'Dolor y C.Paliativos':4,'1ª vez Neurología':3,'Ondas de Choque':1},
     625:{'Clínica de Dolor':21,'Neurología':14,'Dolor y C.Paliativos':6,'Ondas de Choque':1,'1ª vez Dolor':1,'1ª vez Neurología':1},
+    626:{'Neurología':17,'1ª vez Neurología':10},
   };
   days.forEach(d=>{if(svcByDay[d])Object.keys(svcByDay[d]).forEach(s=>{svcAgg[s]=(svcAgg[s]||0)+svcByDay[d][s];});});
   const svcSorted=Object.keys(svcAgg).sort((a,b)=>svcAgg[b]-svcAgg[a]);
