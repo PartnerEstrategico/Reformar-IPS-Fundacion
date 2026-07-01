@@ -129,6 +129,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
   <label>Período:</label>
   <select class="fsel" id="periodo-sel" onchange="onPeriodo()">
     <option value="may">Mayo 2026 (8 días)</option>
+    <option value="jul">Julio 2026 (1 día)</option>
     <option value="jun">Junio 2026 (19 días)</option>
     <option value="todos">Todos los períodos</option>
     <option value="fecha" selected>Fecha específica</option>
@@ -163,7 +164,8 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
       <option value="624">24 jun 2026</option>
       <option value="625">25 jun 2026</option>
       <option value="626">26 jun 2026</option>
-      <option value="627" selected>27 jun 2026</option>
+      <option value="627">27 jun 2026</option>
+      <option value="701" selected>1 jul 2026</option>
     </select>
   </div>
   <div id="rango-wrap" class="fdate-wrap">
@@ -196,6 +198,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
       <option value="625">25 jun 2026</option>
       <option value="626">26 jun 2026</option>
       <option value="627">27 jun 2026</option>
+      <option value="701">1 jul 2026</option>
     </select>
     <label>Hasta:</label>
     <select class="fsel" id="rango-hasta" onchange="applyFilter()">
@@ -225,7 +228,8 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
       <option value="624">24 jun 2026</option>
       <option value="625">25 jun 2026</option>
       <option value="626">26 jun 2026</option>
-      <option value="627" selected>27 jun 2026</option>
+      <option value="627">27 jun 2026</option>
+      <option value="701" selected>1 jul 2026</option>
     </select>
   </div>
   <span class="pill-b" id="pill-citas">—</span>
@@ -360,12 +364,14 @@ const DATA = {
   625:{total:45, answered:26, vm:5,  na:12, busy:2, inv:0, will:19, wont:1,  ignored:6,  dur:[2,3,0,21]},
   626:{total:27, answered:13, vm:2,  na:11, busy:1, inv:0, will:10, wont:0,  ignored:3,  dur:[0,1,1,11]},
   627:{total:17, answered:11, vm:0,  na:6,  busy:0, inv:0, will:9,  wont:0,  ignored:2,  dur:[1,0,0,10]},
+  701:{total:35, answered:23, vm:7,  na:5,  busy:0, inv:0, will:16, wont:1,  ignored:6,  dur:[0,0,5,18]},
 };
 
-const ALL_DAYS=[521,522,523,525,526,527,529,530,602,603,605,606,609,610,612,613,616,617,618,619,620,622,623,624,625,626,627];
+const ALL_DAYS=[521,522,523,525,526,527,529,530,602,603,605,606,609,610,612,613,616,617,618,619,620,622,623,624,625,626,627,701];
 const MAY_DAYS=[521,522,523,525,526,527,529,530];
 const JUN_DAYS=[602,603,605,606,609,610,612,613,616,617,618,619,620,622,623,624,625,626,627];
-const DAY_LABELS={521:'21 may',522:'22 may',523:'23 may',525:'25 may',526:'26 may',527:'27 may',529:'29 may',530:'30 may',602:'2 jun',603:'3 jun',605:'5 jun',606:'6 jun',609:'9 jun',610:'10 jun',612:'12 jun',613:'13 jun',616:'16 jun',617:'17 jun',618:'18 jun',619:'19 jun',620:'20 jun',622:'22 jun',623:'23 jun',624:'24 jun',625:'25 jun',626:'26 jun',627:'27 jun'};
+const JUL_DAYS=[701];
+const DAY_LABELS={521:'21 may',522:'22 may',523:'23 may',525:'25 may',526:'26 may',527:'27 may',529:'29 may',530:'30 may',602:'2 jun',603:'3 jun',605:'5 jun',606:'6 jun',609:'9 jun',610:'10 jun',612:'12 jun',613:'13 jun',616:'16 jun',617:'17 jun',618:'18 jun',619:'19 jun',620:'20 jun',622:'22 jun',623:'23 jun',624:'24 jun',625:'25 jun',626:'26 jun',627:'27 jun',701:'1 jul'};
 const SVC_COLORS=['#007bff','#20c997','#17a2b8','#6610f2','#6f42c1','#e83e8c','#fd7e14'];
 
 // Sedes data per day (fundacion / nova)
@@ -397,6 +403,7 @@ const SEDE_DATA = {
   625:{f:{t:43,a:25,will:18,wont:1}, n:{t:2,a:1,will:1,wont:0}},
   626:{f:{t:15,a:7,will:6,wont:0},  n:{t:12,a:6,will:4,wont:0}},
   627:{f:{t:9,a:7,will:5,wont:0},   n:{t:8,a:4,will:4,wont:0}},
+  701:{f:{t:23,a:15,will:9,wont:0},  n:{t:12,a:8,will:7,wont:1}},
 };
 
 // Aggregated function
@@ -443,6 +450,7 @@ function onPeriodo(){
 function getRange(){
   const p=document.getElementById('periodo-sel').value;
   if(p==='may') return MAY_DAYS;
+  if(p==='jul') return JUL_DAYS;
   if(p==='jun') return JUN_DAYS;
   if(p==='todos') return ALL_DAYS;
   if(p==='fecha') return [+document.getElementById('fecha-sel').value];
@@ -493,6 +501,7 @@ function applyFilter(){
     610:{'Neurología':1,'Clínica de Dolor':1},
     612:{'Neurología':1},
     // 613: sin cancelaciones
+    701:{'Neurología':1},
     617:{'Neurología':3},
     618:{'Clínica de Dolor':1,'Dolor y C.Paliativos':2},
     622:{'Neurología':4,'Dolor y C.Paliativos':1,'Clínica de Dolor':1},
@@ -589,6 +598,7 @@ function applyFilter(){
     625:{'Clínica de Dolor':21,'Neurología':14,'Dolor y C.Paliativos':6,'Ondas de Choque':1,'1ª vez Dolor':1,'1ª vez Neurología':1},
     626:{'Neurología':17,'1ª vez Neurología':10},
     627:{'Neurología':6,'1ª vez Neurología':3,'Dolor y C.Paliativos':8},
+    701:{'Neurología':9,'1ª vez Neurología':3,'1ª vez Dolor':2,'Clínica de Dolor':1},
   };
   days.forEach(d=>{if(svcByDay[d])Object.keys(svcByDay[d]).forEach(s=>{svcAgg[s]=(svcAgg[s]||0)+svcByDay[d][s];});});
   const svcSorted=Object.keys(svcAgg).sort((a,b)=>svcAgg[b]-svcAgg[a]);
